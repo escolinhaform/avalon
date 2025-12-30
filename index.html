@@ -217,23 +217,24 @@
         .title-large {
             font-size: 2rem; font-weight: 700; color: #fff;
             line-height: 1.2;
+            position: relative;
+            display: inline-block;
         }
-        .title-accent { color: var(--accent); }
-
-        .status-badge {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--glass-border);
-            font-size: 0.85rem;
+        
+        /* Animação Idle no Título */
+        @keyframes shine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
         }
-        .status-dot {
-            width: 8px; height: 8px; background: #22c55e;
-            border-radius: 50%; box-shadow: 0 0 5px #22c55e;
-            animation: pulse 2s infinite;
+        .title-accent { 
+            color: var(--accent);
+            background: linear-gradient(90deg, var(--accent) 0%, #fff 50%, var(--accent) 100%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s linear infinite;
         }
-        @keyframes pulse { 50% { opacity: 0.5; } }
 
         /* --- Filtros --- */
         .filters-bar {
@@ -304,31 +305,51 @@
             100% { background-position: 0% 0%; }
         }
 
+        /* Animação de Flutuação Suave dos Cards */
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
         .card {
             /* Fundo com gradiente sutil e animado */
             background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(20,20,20,0.4) 50%, rgba(255,255,255,0.03) 100%);
             background-size: 200% 200%;
-            animation: cardBgMove 15s ease infinite;
-
+            animation: cardBgMove 15s ease infinite, float-card 6s ease-in-out infinite;
+            /* Adiciona um delay aleatório para cada card via JS ou nth-child para não sincronizar */
+            
             backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 24px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
             position: relative;
             overflow: hidden;
         }
+        
+        /* Delays para animação de flutuação para quebrar a uniformidade */
+        .card:nth-child(2n) { animation-delay: 0s, 1s; }
+        .card:nth-child(3n) { animation-delay: 0s, 2s; }
+        .card:nth-child(5n) { animation-delay: 0s, 3s; }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.01); /* Sobrescreve a animação float no hover */
             border-color: rgba(250, 204, 21, 0.4);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(250,204,21,0.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 25px rgba(250,204,21,0.15);
+            animation-play-state: running, paused; /* Pausa o float no hover */
+            z-index: 2;
         }
 
         .card-header-row {
             display: flex; justify-content: space-between; align-items: flex-start;
             margin-bottom: 16px;
+        }
+
+        /* Animação de Pulso nos Ícones */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 rgba(250, 204, 21, 0); border-color: rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 10px rgba(250, 204, 21, 0.1); border-color: rgba(250, 204, 21, 0.2); }
         }
 
         .icon-circle {
@@ -339,10 +360,13 @@
             display: flex; align-items: center; justify-content: center;
             color: var(--text-secondary);
             transition: 0.3s;
+            animation: pulse-glow 4s infinite ease-in-out;
         }
         .card:hover .icon-circle {
             color: var(--accent);
             border-color: rgba(250,204,21,0.3);
+            background: rgba(250, 204, 21, 0.05);
+            animation: none; /* Para animação no hover */
         }
 
         .card-id {
@@ -505,7 +529,15 @@
         // --- Configuração API ---
         const SUPABASE_URL = "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/dgs_realizadas";
         const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5NDUyMDgsImV4cCI6MjA4MjUyMTIwOH0.TaDw28xYzzIbkQQMVjyO_Rq8ljIS8S_rbQ3Y8fGvOoI";
-        const ITEMS_PER_PAGE = 12;
+        
+        // Função para calcular itens por página dinamicamente
+        const getDynamicItemsPerPage = () => {
+            const width = window.innerWidth;
+            if (width < 640) return 6; // Mobile: 1 coluna, 6 itens
+            if (width < 1024) return 9; // Tablet: 2/3 colunas, 9 itens
+            if (width < 1440) return 12; // Laptop: 3/4 colunas, 12 itens
+            return 16; // Telas grandes: 4+ colunas, 16 itens
+        };
 
         const formatDate = (dateString) => {
             if (!dateString) return 'Data desconhecida';
@@ -658,10 +690,21 @@
             const [mobileOpen, setMobileOpen] = React.useState(false);
             const [currentPage, setCurrentPage] = React.useState(1);
             const [isCollapsed, setIsCollapsed] = React.useState(false);
+            const [itemsPerPage, setItemsPerPage] = React.useState(getDynamicItemsPerPage());
             
             // Filtros
             const [searchTerm, setSearchTerm] = React.useState('');
             const [dateFilter, setDateFilter] = React.useState('');
+
+            // Efeito para ajustar paginação ao redimensionar
+            React.useEffect(() => {
+                const handleResize = () => {
+                    setItemsPerPage(getDynamicItemsPerPage());
+                };
+                
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
 
             React.useEffect(() => {
                 const fetchDgs = async () => {
@@ -722,8 +765,8 @@
                 setCurrentPage(1);
             }, [searchTerm, dateFilter]);
 
-            const totalPages = Math.ceil(filteredDgs.length / ITEMS_PER_PAGE);
-            const currentItems = filteredDgs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+            const totalPages = Math.ceil(filteredDgs.length / itemsPerPage);
+            const currentItems = filteredDgs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
             const handlePageChange = (val) => {
                 if(val >= 1 && val <= totalPages) {
@@ -819,10 +862,7 @@
                                         {dgs.length !== filteredDgs.length && <span style={{fontSize: '0.8rem', marginLeft: '5px', opacity: 0.7}}>(de {dgs.length})</span>}
                                     </p>
                                 </div>
-                                <div className="status-badge">
-                                    <div className="status-dot"></div>
-                                    Online
-                                </div>
+                                {/* Badge de Online Removido */}
                             </div>
                             
                             {/* Barra de Filtros */}
