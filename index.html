@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escolinha Avalon - Histórico</title>
+
+    <!-- React e ReactDOM via CDN -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
+    <!-- Babel para compilar JSX no navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      /* --- Variáveis e Reset --- */
+      :root {
+        --bg-color: #050505;
+        --text-primary: #e5e5e5;
+        --text-secondary: #a3a3a3;
+        --accent: #facc15; /* Amarelo */
+        --accent-glow: rgba(250, 204, 21, 0.5);
+        --glass-bg: rgba(20, 20, 20, 0.6);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-blur: 16px;
+        --card-hover: rgba(255, 255, 255, 0.03);
+        --font-family: "Segoe UI", system-ui, sans-serif;
+        --sidebar-width: 260px;
+        --sidebar-width-collapsed: 80px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        font-family: var(--font-family);
+        overflow: hidden; /* App controla o scroll */
+        height: 100vh;
+        width: 100vw;
+      }
+
+      /* --- Animação de Fundo (Orbes) --- */
+      .ambient-light {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        animation: float 20s infinite ease-in-out;
+      }
+      .orb-1 {
+        top: -10%;
+        left: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(
+          circle,
+          rgba(250, 204, 21, 0.15) 0%,
+          transparent 70%
+        );
+      }
+      .orb-2 {
+        bottom: -10%;
+        right: -10%;
+        width: 40vw;
+        height: 40vw;
+        background: radial-gradient(
+          circle,
+          rgba(100, 100, 100, 0.2) 0%,
+          transparent 70%
+        );
+        animation-delay: -5s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(30px, -30px);
+        }
+      }
+
+      /* --- Layout Principal --- */
+      #root {
+        height: 100%;
+        display: flex;
+      }
+
+      .app-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      /* --- Sidebar --- */
+      .sidebar {
+        width: var(--sidebar-width);
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(var(--glass-blur));
+        border-right: 1px solid var(--glass-border);
+        display: flex;
+        flex-direction: column;
+        z-index: 50;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+        white-space: nowrap; /* Impede quebra de texto na animação */
+      }
+
+      .sidebar.collapsed {
+        width: var(--sidebar-width-collapsed);
+      }
+
+      .sidebar-header {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        /* Justify content controlado inline no React para facilitar */
+        padding: 0 20px;
+        border-bottom: 1px solid var(--glass-border);
+        background: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
+        transition: padding 0.3s;
+      }
+
+      .sidebar.collapsed .sidebar-header {
+        justify-content: center;
+        padding: 0;
+      }
+
+      .nav-items {
+        flex: 1;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .nav-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--text-secondary);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        overflow: hidden;
+      }
+
+      .sidebar.collapsed .nav-btn {
+        justify-content: center;
+        padding: 12px;
+      }
+
+      .nav-btn.active {
+        background: rgba(250, 204, 21, 0.1);
+        color: var(--accent);
+        border-color: rgba(250, 204, 21, 0.2);
+      }
+
+      .nav-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+      }
+
+      .nav-btn svg {
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+      .sidebar.collapsed .nav-btn svg {
+        margin-right: 0;
+      }
+
+      .nav-text {
+        opacity: 1;
+        transition: opacity 0.2s;
+      }
+      .sidebar.collapsed .nav-text {
+        opacity: 0;
+        display: none;
+      }
+
+      /* Botão Toggle no Header */
+      .header-toggle-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: var(--text-secondary);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+      }
+      .header-toggle-btn:hover {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .footer-text {
+        font-size: 0.8rem;
+        color: #666;
+        text-align: center;
+        margin-top: 10px;
+        transition: opacity 0.2s;
+      }
+      .sidebar.collapsed .footer-text {
+        display: none;
+      }
+
+      /* --- Conteúdo Principal --- */
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background: transparent;
+        width: 100%; /* Garante que ocupe o resto */
+        overflow: hidden;
+      }
+
+      .top-bar-mobile {
+        display: none; /* Só aparece no mobile */
+        height: 60px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .content-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 40px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .title-large {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+      }
+      .title-accent {
+        color: var(--accent);
+      }
+
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--glass-border);
+        font-size: 0.85rem;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 5px #22c55e;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* --- Grid & Cards --- */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      /* Animação Discreta do Card Background */
+      @keyframes cardBgMove {
+        0% {
+          background-position: 0% 0%;
+        }
+        50% {
+          background-position: 100% 100%;
+        }
+        100% {
+          background-position: 0% 0%;
+        }
+      }
+
+      .card {
+        /* Fundo com gradiente sutil e animado */
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.03) 0%,
+          rgba(20, 20, 20, 0.4) 50%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        background-size: 200% 200%;
+        animation: cardBgMove 15s ease infinite;
+
+        backdrop-filter: blur(var(--glass-blur));
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 24px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(250, 204, 21, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(250, 204, 21, 0.1);
+      }
+
+      .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+
+      .icon-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: 0.3s;
+      }
+      .card:hover .icon-circle {
+        color: var(--accent);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .card-id {
+        font-size: 0.75rem;
+        font-weight: bold;
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 6px;
+        color: var(--text-secondary);
+        border: 1px solid var(--glass-border);
+      }
+
+      .card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        transition: color 0.3s;
+      }
+      .card:hover h3 {
+        color: var(--accent);
+      }
+
+      .card-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .view-more {
+        margin-top: 16px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s;
+      }
+      .card:hover .view-more {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* --- Modal --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .modal-content {
+        background: #0a0a0a;
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        border: 1px solid rgba(250, 204, 21, 0.3);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+        animation: zoomIn 0.2s ease-out;
+      }
+
+      .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--glass-border);
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .modal-body {
+        padding: 24px;
+        overflow-y: auto;
+      }
+
+      /* --- Tabelas e Stats no Modal --- */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+      }
+      .stat-box {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+      }
+      .stat-val {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-top: 4px;
+      }
+
+      .players-table-container {
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      th {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 16px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        font-weight: 600;
+      }
+      td {
+        padding: 14px 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        color: #ddd;
+        font-size: 0.9rem;
+      }
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .progress-bg {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        width: 100%;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 3px;
+      }
+
+      /* --- Paginação --- */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .page-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: var(--text-secondary);
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .page-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .page-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      /* --- Scrollbar Customizada --- */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* --- Mobile --- */
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          transform: translateX(-100%);
+          width: 260px; /* Fixa no mobile */
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .top-bar-mobile {
+          display: flex;
+        }
+        .content-scroll {
+          padding: 20px;
+        }
+        .title-large {
+          font-size: 1.5rem;
+        }
+      }
+
+      /* Animações CSS */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // --- Ícones SVG Componentes ---
+      const Icons = {
+        Swords: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+            <path d="m13 19 6-6" />
+            <path d="M16 16 4 4" />
+            <path d="M19 21 7 9" />
+          </svg>
+        ),
+        History: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12" />
+            <path d="M3 3v9h9" />
+            <path d="M12 7v5l4 2" />
+          </svg>
+        ),
+        Users: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        ),
+        Calendar: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+            <line x1="16" x2="16" y1="2" y2="6" />
+            <line x1="8" x2="8" y1="2" y2="6" />
+            <line x1="3" x2="21" y1="10" y2="10" />
+          </svg>
+        ),
+        X: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        ),
+        ChevronRight: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        ),
+        ChevronLeft: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        ),
+        Menu: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="4" x2="20" y1="12" y2="12" />
+            <line x1="4" x2="20" y1="6" y2="6" />
+            <line x1="4" x2="20" y1="18" y2="18" />
+          </svg>
+        ),
+        GraduationCap: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+        ),
+        Trophy: () => (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+            <path d="M4 22h16" />
+            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+          </svg>
+        ),
+      };
+
+      // --- Configuração API ---
+      const SUPABASE_URL =
+        "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/dgs_realizadas";
+      const API_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5NDUyMDgsImV4cCI6MjA4MjUyMTIwOH0.TaDw28xYzzIbkQQMVjyO_Rq8ljIS8S_rbQ3Y8fGvOoI";
+      const ITEMS_PER_PAGE = 12;
+
+      const formatDate = (dateString) => {
+        if (!dateString) return "Data desconhecida";
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("pt-PT", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
+      };
+
+      // --- Componentes ---
+
+      const Card = ({ data, onClick }) => {
+        // Calcular o máximo de DGs para exibir no card
+        const maxDgs =
+          data.players && data.players.length > 0
+            ? Math.max(...data.players.map((p) => Number(p.storePoints) || 0))
+            : 0;
+
+        return (
+          <div className="card" onClick={() => onClick(data)}>
+            <div className="card-header-row">
+              <div className="icon-circle">
+                <Icons.Swords />
+              </div>
+              <span className="card-id">ID: {data.id}</span>
+            </div>
+            <h3>{data.name}</h3>
+            <div className="card-meta">
+              <div className="meta-item">
+                <Icons.Calendar style={{ width: 16 }} /> {formatDate(data.date)}
+              </div>
+              <div className="meta-item">
+                <Icons.Users style={{ width: 16 }} />{" "}
+                {data.players ? data.players.length : 0} Alunos
+              </div>
+              <div className="meta-item">
+                <Icons.Trophy style={{ width: 16, color: "var(--accent)" }} />{" "}
+                {maxDgs} DGs Realizadas
+              </div>
+            </div>
+            <div className="view-more">
+              Ver Detalhes <Icons.ChevronRight style={{ width: 16 }} />
+            </div>
+          </div>
+        );
+      };
+
+      const SkeletonCard = () => (
+        <div className="card" style={{ opacity: 0.5, pointerEvents: "none" }}>
+          <div className="card-header-row">
+            <div
+              className="icon-circle"
+              style={{ background: "rgba(255,255,255,0.1)" }}
+            ></div>
+          </div>
+          <div
+            style={{
+              height: "24px",
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: "4px",
+              marginBottom: "10px",
+            }}
+          ></div>
+          <div
+            style={{
+              height: "16px",
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: "4px",
+              width: "60%",
+            }}
+          ></div>
+        </div>
+      );
+
+      const Modal = ({ data, onClose }) => {
+        if (!data) return null;
+
+        // Calcular o máximo de DGs com base no maior valor de 'storePoints'
+        const maxDgs =
+          data.players && data.players.length > 0
+            ? Math.max(...data.players.map((p) => Number(p.storePoints) || 0))
+            : 0;
+
+        return (
+          <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <div>
+                  <h2
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: "1.5rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <Icons.GraduationCap /> {data.name}
+                  </h2>
+                  <p
+                    style={{
+                      color: "var(--text-secondary)",
+                      marginTop: "5px",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    {formatDate(data.date)}
+                  </p>
+                </div>
+                <button
+                  onClick={onClose}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#fff",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Icons.X />
+                </button>
+              </div>
+              <div className="modal-body custom-scrollbar">
+                <div className="stats-grid">
+                  <div className="stat-box">
+                    <div
+                      style={{
+                        color: "var(--text-secondary)",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Total Alunos
+                    </div>
+                    <div className="stat-val">{data.players?.length || 0}</div>
+                  </div>
+                  <div className="stat-box">
+                    <div
+                      style={{
+                        color: "var(--text-secondary)",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      DGs Realizadas
+                    </div>
+                    <div className="stat-val" style={{ color: "#3b82f6" }}>
+                      {maxDgs}
+                    </div>
+                  </div>
+                  <div className="stat-box">
+                    <div
+                      style={{
+                        color: "var(--text-secondary)",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Pontos Distribuídos
+                    </div>
+                    <div
+                      className="stat-val"
+                      style={{ color: "var(--accent)" }}
+                    >
+                      {data.players
+                        ? data.players.reduce(
+                            (acc, p) => acc + (p.points || 0),
+                            0
+                          )
+                        : 0}
+                    </div>
+                  </div>
+                  <div className="stat-box">
+                    <div
+                      style={{
+                        color: "var(--text-secondary)",
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      Top DPS
+                    </div>
+                    <div
+                      className="stat-val"
+                      style={{ fontSize: "1.1rem", color: "#ef4444" }}
+                    >
+                      {data.players && data.players.length > 0
+                        ? data.players.reduce((max, p) =>
+                            parseInt(p.damage || 0) > parseInt(max.damage || 0)
+                              ? p
+                              : max
+                          ).nick
+                        : "N/A"}
+                    </div>
+                  </div>
+                </div>
+
+                <h3
+                  style={{
+                    color: "#fff",
+                    marginBottom: "15px",
+                    display: "flex",
+                    gap: "10px",
+                  }}
+                >
+                  <Icons.History /> Performance
+                </h3>
+
+                <div className="players-table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Aluno</th>
+                        <th>Role</th>
+                        <th style={{ textAlign: "right" }}>Dano</th>
+                        <th style={{ textAlign: "center" }}>Pontos</th>
+                        <th style={{ width: "30%" }}>Contribuição</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.players?.map((player, idx) => (
+                        <tr key={idx}>
+                          <td style={{ fontWeight: "500" }}>{player.nick}</td>
+                          <td>
+                            <span
+                              style={{
+                                background: "rgba(255,255,255,0.1)",
+                                padding: "2px 6px",
+                                borderRadius: "4px",
+                                fontSize: "0.8rem",
+                              }}
+                            >
+                              {player.role}
+                            </span>
+                          </td>
+                          <td
+                            style={{
+                              textAlign: "right",
+                              fontFamily: "monospace",
+                            }}
+                          >
+                            {parseInt(player.damage).toLocaleString("pt-PT")}
+                          </td>
+                          <td
+                            style={{
+                              textAlign: "center",
+                              color: "var(--accent)",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {player.points}
+                          </td>
+                          <td>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                              }}
+                            >
+                              <div className="progress-bg">
+                                <div
+                                  className="progress-fill"
+                                  style={{ width: player.maxPercentage }}
+                                ></div>
+                              </div>
+                              <span
+                                style={{
+                                  fontSize: "0.75rem",
+                                  color: "#999",
+                                  width: "35px",
+                                }}
+                              >
+                                {player.maxPercentage}
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const App = () => {
+        const [dgs, setDgs] = React.useState([]);
+        const [loading, setLoading] = React.useState(true);
+        const [error, setError] = React.useState(null);
+        const [selectedDg, setSelectedDg] = React.useState(null);
+        const [mobileOpen, setMobileOpen] = React.useState(false);
+        const [currentPage, setCurrentPage] = React.useState(1);
+        const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+        React.useEffect(() => {
+          const fetchDgs = async () => {
+            let allData = [];
+            let page = 0;
+            const pageSize = 1000;
+            let hasMore = true;
+
+            try {
+              while (hasMore) {
+                const offset = page * pageSize;
+                const params = new URLSearchParams({
+                  select: "*",
+                  order: "date.desc",
+                  limit: pageSize,
+                  offset: offset,
+                  apikey: API_KEY,
+                });
+
+                const response = await fetch(
+                  `${SUPABASE_URL}?${params.toString()}`
+                );
+                if (!response.ok) throw new Error("Falha ao conectar à API");
+
+                const data = await response.json();
+
+                if (data.length > 0) {
+                  allData = [...allData, ...data];
+                  if (data.length < pageSize) {
+                    hasMore = false;
+                  } else {
+                    page++;
+                  }
+                } else {
+                  hasMore = false;
+                }
+              }
+              setDgs(allData);
+            } catch (err) {
+              setError("Erro ao carregar histórico: " + err.message);
+              console.error(err);
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchDgs();
+        }, []);
+
+        const totalPages = Math.ceil(dgs.length / ITEMS_PER_PAGE);
+        const currentItems = dgs.slice(
+          (currentPage - 1) * ITEMS_PER_PAGE,
+          currentPage * ITEMS_PER_PAGE
+        );
+
+        const handlePageChange = (val) => {
+          if (val >= 1 && val <= totalPages) {
+            setCurrentPage(val);
+            document
+              .getElementById("list-top")
+              .scrollIntoView({ behavior: "smooth" });
+          }
+        };
+
+        return (
+          <div className="app-container">
+            <div className="ambient-light">
+              <div className="orb orb-1"></div>
+              <div className="orb orb-2"></div>
+            </div>
+
+            {/* Mobile Overlay */}
+            {mobileOpen && (
+              <div
+                className="modal-overlay"
+                style={{ zIndex: 40 }}
+                onClick={() => setMobileOpen(false)}
+              ></div>
+            )}
+
+            {/* Sidebar */}
+            <aside
+              className={`sidebar ${mobileOpen ? "open" : ""} ${
+                isCollapsed ? "collapsed" : ""
+              }`}
+            >
+              <div
+                className="sidebar-header"
+                style={{
+                  justifyContent: isCollapsed ? "center" : "space-between",
+                  padding: isCollapsed ? "0" : "0 20px",
+                }}
+              >
+                {/* Conteúdo Expandido */}
+                {!isCollapsed && (
+                  <>
+                    <div style={{ animation: "fadeIn 0.3s" }}>
+                      <div
+                        style={{
+                          color: "#fff",
+                          fontWeight: "bold",
+                          lineHeight: "1",
+                        }}
+                      >
+                        ESCOLINHA
+                      </div>
+                      <div
+                        style={{
+                          color: "var(--accent)",
+                          fontWeight: "bold",
+                          lineHeight: "1",
+                        }}
+                      >
+                        AVALON
+                      </div>
+                    </div>
+                    <button
+                      className="header-toggle-btn"
+                      onClick={() => setIsCollapsed(true)}
+                      title="Recolher Menu"
+                    >
+                      <Icons.ChevronLeft />
+                    </button>
+                  </>
+                )}
+
+                {/* Conteúdo Recolhido (Botão substitui o logo antigo) */}
+                {isCollapsed && (
+                  <button
+                    onClick={() => setIsCollapsed(false)}
+                    title="Expandir Menu"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      background: "var(--accent)",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#000",
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: "0 0 10px var(--accent-glow)",
+                    }}
+                  >
+                    <Icons.ChevronRight />
+                  </button>
+                )}
+              </div>
+
+              <nav className="nav-items">
+                <button className="nav-btn active" title="Histórico de Aulas">
+                  <Icons.History width={20} />
+                  <span className="nav-text">Histórico de Aulas</span>
+                </button>
+              </nav>
+
+              {/* Rodapé */}
+              <div className="footer-text" style={{ padding: "0 20px 20px" }}>
+                &copy; 2025 Avalon
+              </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="main-content">
+              <div className="top-bar-mobile">
+                <div style={{ fontWeight: "bold", color: "#fff" }}>AVALON</div>
+                <button
+                  onClick={() => setMobileOpen(true)}
+                  style={{ background: "none", border: "none", color: "#fff" }}
+                >
+                  <Icons.Menu />
+                </button>
+              </div>
+
+              <div className="content-scroll" id="list-top">
+                <div className="section-header">
+                  <div>
+                    <h1 className="title-large">
+                      Histórico de <span className="title-accent">Aulas</span>
+                    </h1>
+                    <p
+                      style={{
+                        color: "#888",
+                        marginTop: "4px",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      Total de aulas realizadas:{" "}
+                      <span style={{ color: "#fff", fontWeight: "bold" }}>
+                        {dgs.length}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="status-badge">
+                    <div className="status-dot"></div>
+                    Online
+                  </div>
+                </div>
+
+                {error && (
+                  <div
+                    style={{
+                      color: "red",
+                      padding: "20px",
+                      background: "rgba(255,0,0,0.1)",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    {error}
+                  </div>
+                )}
+
+                <div className="cards-grid">
+                  {loading
+                    ? Array(8)
+                        .fill(0)
+                        .map((_, i) => <SkeletonCard key={i} />)
+                    : currentItems.map((dg) => (
+                        <Card key={dg.id} data={dg} onClick={setSelectedDg} />
+                      ))}
+                </div>
+
+                {!loading && !error && (
+                  <div className="pagination">
+                    <button
+                      className="page-btn"
+                      disabled={currentPage === 1}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                      <Icons.ChevronLeft />
+                    </button>
+                    <span style={{ color: "#888" }}>
+                      Página <b style={{ color: "#fff" }}>{currentPage}</b> de{" "}
+                      {totalPages}
+                    </span>
+                    <button
+                      className="page-btn"
+                      disabled={currentPage === totalPages}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      <Icons.ChevronRight />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </main>
+
+            <Modal data={selectedDg} onClose={() => setSelectedDg(null)} />
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
