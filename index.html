@@ -31,13 +31,21 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Animação do Background Geral */
+        @keyframes bgPulse {
+            0% { background-color: #050505; }
+            50% { background-color: #0a0a05; }
+            100% { background-color: #050505; }
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
             font-family: var(--font-family);
             overflow: hidden; /* App controla o scroll */
             height: 100vh;
-            width: 100vw;
+            width: 100%;
+            animation: bgPulse 10s infinite ease-in-out;
         }
 
         /* --- Animação de Fundo (Orbes) --- */
@@ -65,11 +73,6 @@
             animation-delay: -5s;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -30px); }
-        }
-
         /* --- Layout Principal --- */
         #root { height: 100%; display: flex; }
 
@@ -81,6 +84,12 @@
         }
 
         /* --- Sidebar --- */
+        @keyframes sidebarPulse {
+            0% { background-color: rgba(0,0,0,0.8); border-right-color: rgba(255,255,255,0.1); }
+            50% { background-color: rgba(20, 18, 5, 0.85); border-right-color: rgba(250, 204, 21, 0.3); }
+            100% { background-color: rgba(0,0,0,0.8); border-right-color: rgba(255,255,255,0.1); }
+        }
+
         .sidebar {
             width: var(--sidebar-width);
             background: rgba(0,0,0,0.8);
@@ -90,385 +99,302 @@
             flex-direction: column;
             z-index: 50;
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
-            white-space: nowrap; /* Impede quebra de texto na animação */
+            white-space: nowrap;
+            animation: sidebarPulse 8s infinite ease-in-out;
         }
 
-        .sidebar.collapsed {
-            width: var(--sidebar-width-collapsed);
-        }
+        .sidebar.collapsed { width: var(--sidebar-width-collapsed); }
         
         .sidebar-header {
-            height: 80px;
-            display: flex;
-            align-items: center;
-            /* Justify content controlado inline no React para facilitar */
-            padding: 0 20px;
-            border-bottom: 1px solid var(--glass-border);
-            background: rgba(255,255,255,0.02);
-            overflow: hidden;
-            transition: padding 0.3s;
+            height: 80px; display: flex; align-items: center; padding: 0 20px;
+            border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.02);
+            overflow: hidden; transition: padding 0.3s;
         }
-        
-        .sidebar.collapsed .sidebar-header {
-            justify-content: center;
-            padding: 0;
-        }
+        .sidebar.collapsed .sidebar-header { justify-content: center; padding: 0; }
 
         .nav-items { flex: 1; padding: 20px 10px; display: flex; flex-direction: column; gap: 5px; }
 
         .nav-btn {
-            width: 100%;
-            display: flex; align-items: center;
-            padding: 12px 16px;
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-secondary);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            overflow: hidden;
+            width: 100%; display: flex; align-items: center; padding: 12px 16px;
+            background: transparent; border: 1px solid transparent; color: var(--text-secondary);
+            border-radius: 10px; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; overflow: hidden;
         }
-
-        .sidebar.collapsed .nav-btn {
-            justify-content: center;
-            padding: 12px;
-        }
-
-        .nav-btn.active {
-            background: rgba(250, 204, 21, 0.1);
-            color: var(--accent);
-            border-color: rgba(250, 204, 21, 0.2);
-        }
-
-        .nav-btn:hover:not(.active) {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-        }
-
+        .sidebar.collapsed .nav-btn { justify-content: center; padding: 12px; }
+        .nav-btn.active { background: rgba(250, 204, 21, 0.1); color: var(--accent); border-color: rgba(250, 204, 21, 0.2); }
+        .nav-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: #fff; }
         .nav-btn svg { margin-right: 12px; flex-shrink: 0; }
         .sidebar.collapsed .nav-btn svg { margin-right: 0; }
-
-        .nav-text {
-            opacity: 1;
-            transition: opacity 0.2s;
-        }
-        .sidebar.collapsed .nav-text {
-            opacity: 0;
-            display: none;
-        }
+        .nav-text { opacity: 1; transition: opacity 0.2s; }
+        .sidebar.collapsed .nav-text { opacity: 0; display: none; }
         
-        /* Botão Toggle no Header */
         .header-toggle-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            width: 32px; height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: var(--text-secondary); width: 32px; height: 32px; border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
         .header-toggle-btn:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
-
-        .footer-text {
-            font-size: 0.8rem; color: #666;
-            text-align: center;
-            margin-top: 10px;
-            transition: opacity 0.2s;
-        }
-        .sidebar.collapsed .footer-text {
-            display: none;
-        }
+        .footer-text { font-size: 0.8rem; color: #666; text-align: center; margin-top: 10px; transition: opacity 0.2s; }
+        .sidebar.collapsed .footer-text { display: none; }
 
         /* --- Conteúdo Principal --- */
         .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: transparent;
-            width: 100%; /* Garante que ocupe o resto */
-            overflow: hidden;
+            flex: 1; display: flex; flex-direction: column; position: relative;
+            background: transparent; width: 100%; overflow: hidden;
         }
-
         .top-bar-mobile {
-            display: none; /* Só aparece no mobile */
-            height: 60px;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
+            display: none; height: 60px; align-items: center; justify-content: space-between;
+            padding: 0 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
         }
-
-        .content-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 40px;
-        }
-
+        .content-scroll { flex: 1; overflow-y: auto; padding: 40px; }
+        
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 30px; flex-wrap: wrap; gap: 15px;
+            max-width: 1400px; margin-left: auto; margin-right: auto; width: 100%;
         }
 
-        .title-large {
-            font-size: 2rem; font-weight: 700; color: #fff;
-            line-height: 1.2;
-            position: relative;
-            display: inline-block;
-        }
-        
-        /* Animação Idle no Título */
         @keyframes shine {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
-        .title-accent { 
-            color: var(--accent);
-            background: linear-gradient(90deg, var(--accent) 0%, #fff 50%, var(--accent) 100%);
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 5s linear infinite;
+        .title-large {
+            font-size: 2rem; font-weight: 700; color: #fff; line-height: 1.2;
+            position: relative; display: inline-block;
+            background: linear-gradient(90deg, #fff 0%, var(--accent) 50%, #fff 100%);
+            background-size: 200% auto; background-clip: text; -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; animation: shine 5s linear infinite;
         }
 
         /* --- Filtros --- */
-        .filters-bar {
-            display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; align-items: center;
+        .filters-bar { 
+            display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; align-items: center; 
+            max-width: 1400px; margin-left: auto; margin-right: auto;
         }
-        .filter-input-group {
-            position: relative; flex: 1; min-width: 200px;
-        }
+        .filter-input-group { position: relative; flex: 1; min-width: 200px; }
         .filter-input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 12px 16px 12px 42px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s;
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px 16px 12px 42px; color: #fff;
+            font-family: inherit; font-size: 0.95rem; outline: none; transition: all 0.3s;
         }
-        .filter-input::placeholder { color: rgba(255,255,255,0.3); }
-        .filter-input:focus {
-            border-color: var(--accent);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 15px rgba(250, 204, 21, 0.1);
-        }
-        .filter-icon {
-            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-            color: var(--text-secondary);
-            pointer-events: none;
-        }
-        .date-input-group .filter-input {
-            padding-left: 16px; /* Ajuste para date input */
-            color-scheme: dark;
-        }
-        
+        .filter-input:focus { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+        .filter-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+        .date-input-group .filter-input { padding-left: 16px; color-scheme: dark; }
         .clear-btn {
-            height: 44px;
-            padding: 0 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem;
-            white-space: nowrap;
+            height: 44px; padding: 0 20px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text-secondary);
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
         }
-        .clear-btn:hover {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
+        .clear-btn:hover { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
 
-        /* --- Grid & Cards --- */
+        /* --- Cards --- */
         .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px; margin-bottom: 40px;
+            max-width: 1400px; margin-left: auto; margin-right: auto;
         }
-
-        /* Animação Discreta do Card Background */
         @keyframes cardBgMove {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
+            0% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } 100% { background-position: 0% 0%; }
         }
-
-        /* Animação de Flutuação Suave dos Cards */
-        @keyframes float-card {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-
         .card {
-            /* Fundo com gradiente sutil e animado */
             background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(20,20,20,0.4) 50%, rgba(255,255,255,0.03) 100%);
-            background-size: 200% 200%;
-            animation: cardBgMove 15s ease infinite, float-card 6s ease-in-out infinite;
-            /* Adiciona um delay aleatório para cada card via JS ou nth-child para não sincronizar */
-            
-            backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 24px;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
-            position: relative;
-            overflow: hidden;
+            background-size: 200% 200%; animation: cardBgMove 15s ease infinite;
+            backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 24px; cursor: pointer; position: relative; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            display: flex; flex-direction: column; min-height: 240px;
         }
-        
-        /* Delays para animação de flutuação para quebrar a uniformidade */
-        .card:nth-child(2n) { animation-delay: 0s, 1s; }
-        .card:nth-child(3n) { animation-delay: 0s, 2s; }
-        .card:nth-child(5n) { animation-delay: 0s, 3s; }
-
         .card:hover {
-            transform: translateY(-8px) scale(1.01); /* Sobrescreve a animação float no hover */
-            border-color: rgba(250, 204, 21, 0.4);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 25px rgba(250,204,21,0.15);
-            animation-play-state: running, paused; /* Pausa o float no hover */
-            z-index: 2;
+            transform: translateY(-5px); border-color: rgba(250, 204, 21, 0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 25px rgba(250,204,21,0.15); z-index: 2;
         }
-
-        .card-header-row {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        /* Animação de Pulso nos Ícones */
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 0 rgba(250, 204, 21, 0); border-color: rgba(255, 255, 255, 0.1); }
             50% { box-shadow: 0 0 10px rgba(250, 204, 21, 0.1); border-color: rgba(250, 204, 21, 0.2); }
         }
-
         .icon-circle {
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--glass-border);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-secondary);
-            transition: 0.3s;
-            animation: pulse-glow 4s infinite ease-in-out;
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); transition: 0.3s; animation: pulse-glow 4s infinite ease-in-out;
         }
-        .card:hover .icon-circle {
-            color: var(--accent);
-            border-color: rgba(250,204,21,0.3);
-            background: rgba(250, 204, 21, 0.05);
-            animation: none; /* Para animação no hover */
-        }
-
-        .card-id {
-            font-size: 0.75rem; font-weight: bold;
-            padding: 4px 8px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        .card h3 {
-            font-size: 1.25rem; font-weight: 700;
-            margin-bottom: 12px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            color: #fff; transition: color 0.3s;
-        }
+        .card:hover .icon-circle { color: var(--accent); border-color: rgba(250,204,21,0.3); background: rgba(250, 204, 21, 0.05); animation: none; }
+        .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .card-id { font-size: 0.75rem; font-weight: bold; padding: 4px 8px; background: rgba(0,0,0,0.6); border-radius: 6px; color: var(--text-secondary); border: 1px solid var(--glass-border); }
+        .card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; transition: color 0.3s; }
         .card:hover h3 { color: var(--accent); }
-
-        .card-meta {
-            font-size: 0.9rem; color: var(--text-secondary);
-            display: flex; flex-direction: column; gap: 6px;
-        }
+        .card-meta { font-size: 0.9rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
         .meta-item { display: flex; align-items: center; gap: 8px; }
-
-        .view-more {
-            margin-top: 16px;
-            font-size: 0.9rem; font-weight: 600;
-            color: var(--accent);
-            display: flex; align-items: center; gap: 5px;
-            opacity: 0; transform: translateX(-10px);
-            transition: all 0.3s;
-        }
+        .view-more { margin-top: 16px; font-size: 0.9rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 5px; opacity: 0; transform: translateX(-10px); transition: all 0.3s; }
         .card:hover .view-more { opacity: 1; transform: translateX(0); }
 
-        /* --- Modal --- */
+        /* --- Ranking Table --- */
+        .ranking-table-container {
+            border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden;
+            background: transparent; /* Removido background duplo */
+            max-width: 1400px; margin: 0 auto;
+        }
+        .ranking-table { width: 100%; border-collapse: collapse; }
+        .ranking-table th {
+            text-align: left; padding: 18px 24px; color: var(--text-secondary);
+            font-size: 0.85rem; text-transform: uppercase; background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .ranking-table td {
+            padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: #e5e5e5; font-size: 0.95rem; vertical-align: middle;
+        }
+        .ranking-table tr { transition: background 0.2s; cursor: pointer; }
+        .ranking-table tr:hover { background: rgba(255,255,255,0.05); }
+        .rank-number { font-weight: 800; font-size: 1.1rem; color: #666; width: 40px; text-align: center; }
+        .rank-top-1 { color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .rank-top-2 { color: #94a3b8; }
+        .rank-top-3 { color: #b45309; }
+        .player-cell { display: flex; align-items: center; gap: 12px; }
+        .player-avatar-small { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border); }
+        
+        /* --- Profile View (App Like) --- */
+        .profile-view {
+            animation: fadeIn 0.3s ease-out;
+            width: 100%; max-width: 1400px; margin: 0 auto;
+        }
+        .profile-header-card {
+            position: relative; border-radius: 20px; overflow: hidden;
+            background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            border: 1px solid var(--glass-border); margin-bottom: 30px;
+        }
+        .profile-banner { height: 220px; width: 100%; background-size: cover; background-position: center; opacity: 0.6; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
+        .profile-info-row {
+            display: flex; align-items: flex-end; padding: 0 40px 30px; margin-top: -80px; position: relative; gap: 30px;
+        }
+        .profile-avatar-large {
+            width: 140px; height: 140px; border-radius: 50%; border: 6px solid #0a0a0a;
+            box-shadow: 0 0 30px rgba(0,0,0,0.6); background: #222; object-fit: cover;
+        }
+        .profile-texts { flex: 1; margin-bottom: 10px; }
+        .profile-texts h2 { font-size: 2.5rem; color: #fff; font-weight: 800; margin: 0; line-height: 1.1; }
+        .profile-texts p { color: var(--accent); font-size: 1.1rem; margin: 0; opacity: 0.9; }
+        
+        .back-btn {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border);
+            color: #fff; padding: 10px 20px; border-radius: 30px; cursor: pointer;
+            backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px;
+            transition: 0.2s; font-weight: 600; font-size: 0.9rem; z-index: 10;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+
+        .profile-stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 40px;
+        }
+        .p-stat-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 20px; text-align: center;
+        }
+        .p-stat-card h4 { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; }
+        .p-stat-card .val { font-size: 1.8rem; font-weight: 700; color: #fff; }
+        
+        /* Layout Grid: Esquerda (Classes) | Direita (Histórico) */
+        .profile-content-split {
+            display: grid;
+            grid-template-columns: 280px 1fr; /* Coluna esquerda mais estreita */
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .profile-left-col { display: flex; flex-direction: column; gap: 20px; }
+        .classes-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .elo-card-small {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px;
+            transition: 0.2s;
+        }
+        .elo-card-small:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+        .elo-icon-small { font-size: 1.5rem; width: 30px; text-align: center; }
+        .elo-info-small { flex: 1; }
+        .elo-role-name-small { font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 2px; }
+        .elo-rank-small { font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between; }
+        
+        .profile-right-col { display: flex; flex-direction: column; gap: 20px; }
+        .profile-section-title { font-size: 1.4rem; color: #fff; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+
+        .elo-progress-bg { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .elo-progress-fill { height: 100%; border-radius: 2px; }
+        
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-yellow-400 { background-color: #facc15; }
+        .bg-gray-400 { background-color: #9ca3af; }
+        .bg-orange-500 { background-color: #f97316; }
+        .bg-green-500 { background-color: #22c55e; }
+        .bg-amber-500 { background-color: #f59e0b; }
+        .text-blue-500 { color: #3b82f6; }
+        .text-yellow-400 { color: #facc15; }
+        
+        /* --- Global Modal (Dungeon Details) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            display: flex; justify-content: center; align-items: center;
-            padding: 20px;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 100;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
             animation: fadeIn 0.2s ease-out;
         }
-
         .modal-content {
-            background: #0a0a0a;
-            width: 100%; max-width: 900px;
-            max-height: 90vh;
-            border: 1px solid rgba(250,204,21,0.3);
-            border-radius: 20px;
-            display: flex; flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            background: #0a0a0a; width: 100%; max-width: 900px; max-height: 90vh;
+            border: 1px solid rgba(250,204,21,0.3); border-radius: 20px; display: flex;
+            flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
             animation: zoomIn 0.2s ease-out;
         }
-
+        
         .modal-header {
             padding: 24px;
             border-bottom: 1px solid var(--glass-border);
             background: rgba(255,255,255,0.03);
             display: flex; justify-content: space-between; align-items: flex-start;
+            flex-shrink: 0; /* Garante que não encolha */
         }
+        
+        .modal-body { padding: 24px; overflow-y: auto; }
 
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto;
-        }
-
-        /* --- Tabelas e Stats no Modal --- */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px; margin-bottom: 30px;
-        }
-        .stat-box {
-            background: rgba(255,255,255,0.05);
-            padding: 16px; border-radius: 12px;
-            border: 1px solid var(--glass-border);
-        }
+        /* --- Tabelas de Detalhes --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid var(--glass-border); }
         .stat-val { font-size: 1.5rem; font-weight: 700; color: #fff; margin-top: 4px; }
         
-        .players-table-container {
-            border: 1px solid var(--glass-border);
-            border-radius: 12px; overflow: hidden;
+        .players-table-container { border: 1px solid var(--glass-border); border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.3); }
+        .players-table-container table { width: 100%; border-collapse: collapse; text-align: left; }
+        .players-table-container th {
+            background: rgba(255,255,255,0.08); padding: 16px; color: var(--text-secondary);
+            font-size: 0.8rem; text-transform: uppercase; font-weight: 700; border-bottom: 1px solid var(--glass-border);
         }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { 
-            background: rgba(255,255,255,0.05); 
-            padding: 16px; 
-            font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); 
-            font-weight: 600;
-        }
-        td { 
-            padding: 14px 16px; 
-            border-top: 1px solid rgba(255,255,255,0.05); 
-            color: #ddd; font-size: 0.9rem;
-        }
-        tr:hover td { background: rgba(255,255,255,0.02); }
+        .players-table-container td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ddd; font-size: 0.9rem; }
+        .players-table-container tr:hover td { background: rgba(255,255,255,0.03); }
 
-        .progress-bg { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; width: 100%; }
-        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+        /* Estilo da barra de progresso (Slider) */
+        .progress-bar-container {
+            width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 4px;
+            /* Gradiente Fogo/Luz mais forte */
+            background: linear-gradient(90deg, #b45309 0%, #f59e0b 50%, #facc15 100%);
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+            transition: width 0.5s ease-out; position: relative;
+            overflow: hidden; /* <--- FIX: Impede que o brilho vaze para a área vazia */
+        }
+        /* Efeito de brilho na barra */
+        .progress-bar-fill::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transform: translateX(-100%); animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* Ícones de Role */
+        .role-icon-img {
+            width: 24px; height: 24px; object-fit: contain; vertical-align: middle; margin-right: 8px;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+        }
+        .role-badge { display: inline-flex; align-items: center; }
 
         /* --- Paginação --- */
         .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; }
@@ -489,17 +415,19 @@
         ::-webkit-scrollbar-thumb:hover { background: #555; }
 
         /* --- Mobile --- */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed; top: 0; bottom: 0; left: 0;
-                transform: translateX(-100%);
-                width: 260px; /* Fixa no mobile */
-            }
+        @media (max-width: 900px) {
+            .sidebar { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); width: 260px; }
             .sidebar.open { transform: translateX(0); }
             .top-bar-mobile { display: flex; }
             .content-scroll { padding: 20px; }
             .title-large { font-size: 1.5rem; }
             .filters-bar { flex-direction: column; align-items: stretch; }
+            .profile-info-row { flex-direction: column; text-align: center; align-items: center; margin-top: -60px; }
+            .profile-avatar-large { width: 120px; height: 120px; margin-bottom: 10px; }
+            .profile-stats-grid { grid-template-columns: 1fr 1fr; }
+            /* Mobile Split Layout Fix */
+            .profile-content-split { grid-template-columns: 1fr; gap: 40px; }
+            .profile-left-col { order: 2; }
         }
 
         /* Animações CSS */
@@ -511,6 +439,51 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        // --- Mapeamento de Ícones de Roles ---
+        const ROLE_ICONS = {
+            'golem': 'https://render.albiononline.com/v1/item/T8_2H_SHAPESHIFTER_KEEPER@4',
+            'elevado': 'https://render.albiononline.com/v1/item/T8_2H_ARCANESTAFF@4',
+            'arcano elevado': 'https://render.albiononline.com/v1/item/T8_2H_ARCANESTAFF@4',
+            'silence': 'https://render.albiononline.com/v1/item/T8_MAIN_ARCANESTAFF@4',
+            'arcano silence': 'https://render.albiononline.com/v1/item/T8_MAIN_ARCANESTAFF@4',
+            'main healer': 'https://render.albiononline.com/v1/item/T8_MAIN_HOLYSTAFF_AVALON@4',
+            'raiz ferrea': 'https://render.albiononline.com/v1/item/T8_MAIN_NATURESTAFF_AVALON@4',
+            'raiz férrea': 'https://render.albiononline.com/v1/item/T8_MAIN_NATURESTAFF_AVALON@4',
+            'bruxo': 'https://render.albiononline.com/v1/item/T8_2H_CURSEDSTAFF_MORGANA@4',
+            'incubus': 'https://render.albiononline.com/v1/item/T8_MAIN_MACE_HELL@4',
+            'quebra reino': 'https://render.albiononline.com/v1/item/T8_2H_AXE_AVALON@4',
+            'quebra-reino': 'https://render.albiononline.com/v1/item/T8_2H_AXE_AVALON@4',
+            'oculto': 'https://render.albiononline.com/v1/item/T8_2H_ARCANESTAFF_HELL@4',
+            'foice de cristal': 'https://render.albiononline.com/v1/item/T8_2H_SCYTHE_HELL@4',
+            'raiz dps': 'https://render.albiononline.com/v1/item/T8_ARMOR_LEATHER_UNDEAD@4',
+            'xbow': 'https://render.albiononline.com/v1/item/T8_2H_REPEATINGCROSSBOW_UNDEAD@4',
+            'aguia': 'https://render.albiononline.com/v1/item/T8_2H_SHAPESHIFTER_AVALON@4',
+            'águia': 'https://render.albiononline.com/v1/item/T8_2H_SHAPESHIFTER_AVALON@4',
+            'fire': 'https://render.albiononline.com/v1/item/T8_2H_INFERNOSTAFF_MORGANA@4',
+            'bruxo dps': 'https://render.albiononline.com/v1/item/T8_MAIN_CURSEDSTAFF_AVALON@4',
+            'frost': 'https://render.albiononline.com/v1/item/T8_MAIN_FROSTSTAFF_AVALON@4',
+            'main tank': 'https://render.albiononline.com/v1/item/T8_MAIN_HAMMER@4',
+            'maintank': 'https://render.albiononline.com/v1/item/T8_MAIN_HAMMER@4',
+            'zelador': 'https://i.ibb.co/kgYdV1zS/Zelador.webp'
+        };
+
+        const getRoleIcon = (roleName) => {
+            if (!roleName) return null;
+            const normalized = roleName.toLowerCase().trim();
+            if (ROLE_ICONS[normalized]) return ROLE_ICONS[normalized];
+            return null; 
+        };
+
+        const RoleBadge = ({ role }) => {
+            const iconUrl = getRoleIcon(role);
+            return (
+                <span className="role-badge" style={{background: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', whiteSpace: 'nowrap'}}>
+                    {iconUrl && <img src={iconUrl} className="role-icon-img" alt="" />}
+                    {role}
+                </span>
+            );
+        };
+
         // --- Ícones SVG Componentes ---
         const Icons = {
             Swords: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="M16 16 4 4"/><path d="M19 21 7 9"/></svg>,
@@ -523,20 +496,25 @@
             Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
             GraduationCap: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>,
             Trophy: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
-            Search: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Search: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+            Ranking: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>,
+            Target: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         };
 
-        // --- Configuração API ---
-        const SUPABASE_URL = "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/dgs_realizadas";
-        const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5NDUyMDgsImV4cCI6MjA4MjUyMTIwOH0.TaDw28xYzzIbkQQMVjyO_Rq8ljIS8S_rbQ3Y8fGvOoI";
+        // --- Configuração APIs ---
+        const DGS_API_URL = "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/dgs_realizadas";
+        const DGS_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY5NDUyMDgsImV4cCI6MjA4MjUyMTIwOH0.TaDw28xYzzIbkQQMVjyO_Rq8ljIS8S_rbQ3Y8fGvOoI";
         
-        // Função para calcular itens por página dinamicamente
+        const PROFILES_API_URL = "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/players_profiles";
+        const PROFILES_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Njk0NTIwOCwiZXhwIjoyMDgyNTIxMjA4fQ.5CnziP68971KRQi7_j41oWAJ_asrSBncZiLLcIMxYfk";
+
+        // --- Helpers ---
         const getDynamicItemsPerPage = () => {
             const width = window.innerWidth;
-            if (width < 640) return 6; // Mobile: 1 coluna, 6 itens
-            if (width < 1024) return 9; // Tablet: 2/3 colunas, 9 itens
-            if (width < 1440) return 12; // Laptop: 3/4 colunas, 12 itens
-            return 16; // Telas grandes: 4+ colunas, 16 itens
+            if (width < 640) return 6;
+            if (width < 1024) return 9;
+            if (width < 1440) return 12;
+            return 16;
         };
 
         const formatDate = (dateString) => {
@@ -548,10 +526,15 @@
             }).format(date);
         };
 
+        const parseDamage = (val) => {
+            if (typeof val === 'number') return val;
+            if (!val) return 0;
+            return parseInt(val.toString().replace(/\./g, '')) || 0;
+        };
+
         // --- Componentes ---
 
         const Card = ({ data, onClick }) => {
-            // Calcular o máximo de DGs para exibir no card
             const maxDgs = data.players && data.players.length > 0 
                 ? Math.max(...data.players.map(p => Number(p.storePoints) || 0)) 
                 : 0;
@@ -559,26 +542,16 @@
             return (
                 <div className="card" onClick={() => onClick(data)}>
                     <div className="card-header-row">
-                        <div className="icon-circle">
-                            <Icons.Swords />
-                        </div>
+                        <div className="icon-circle"><Icons.Swords /></div>
                         <span className="card-id">ID: {data.id}</span>
                     </div>
                     <h3>{data.name}</h3>
                     <div className="card-meta">
-                        <div className="meta-item">
-                            <Icons.Calendar style={{width: 16}} /> {formatDate(data.date)}
-                        </div>
-                        <div className="meta-item">
-                            <Icons.Users style={{width: 16}} /> {data.players ? data.players.length : 0} Alunos
-                        </div>
-                        <div className="meta-item">
-                            <Icons.Trophy style={{width: 16, color: 'var(--accent)'}} /> {maxDgs} DGs Realizadas
-                        </div>
+                        <div className="meta-item"><Icons.Calendar style={{width: 16}} /> {formatDate(data.date)}</div>
+                        <div className="meta-item"><Icons.Users style={{width: 16}} /> {data.players ? data.players.length : 0} Alunos</div>
+                        <div className="meta-item"><Icons.Trophy style={{width: 16, color: 'var(--accent)'}} /> {maxDgs} DGs Realizadas</div>
                     </div>
-                    <div className="view-more">
-                        Ver Detalhes <Icons.ChevronRight style={{width: 16}} />
-                    </div>
+                    <div className="view-more">Ver Detalhes <Icons.ChevronRight style={{width: 16}} /></div>
                 </div>
             );
         };
@@ -593,13 +566,198 @@
             </div>
         );
 
-        const Modal = ({ data, onClose }) => {
+        // --- View de Perfil (App-Like) ---
+        const UserProfileView = ({ profile, allDgs, onBack }) => {
+            if (!profile) return null;
+            const [historyPage, setHistoryPage] = React.useState(1);
+            const historyItemsPerPage = 10;
+
+            const elos = profile.all_players_roles || [];
+            // Sort by points desc
+            const sortedElos = [...elos].sort((a, b) => b.points - a.points);
+            
+            // -------------------------------------------------------------
+            // LÓGICA DE CÁLCULO REAL USANDO TODO O HISTÓRICO (allDgs)
+            // -------------------------------------------------------------
+            const playerHistory = React.useMemo(() => {
+                if (!allDgs || allDgs.length === 0) return [];
+                
+                // Encontrar todas as DGs onde o jogador participou
+                const history = [];
+                const targetNick = profile.nickname.toLowerCase();
+
+                allDgs.forEach(dg => {
+                    if (dg.players) {
+                        const playerData = dg.players.find(p => p.nick && p.nick.toLowerCase() === targetNick);
+                        if (playerData) {
+                            history.push({
+                                ...dg,
+                                // Dados específicos da participação nesta DG
+                                role: playerData.role,
+                                points: playerData.points,
+                                storePoints: playerData.storePoints
+                            });
+                        }
+                    }
+                });
+
+                // Ordenar por data (mais recente primeiro)
+                return history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }, [allDgs, profile]);
+
+            // Soma real de todos os storePoints encontrados
+            const totalDgsCalc = playerHistory.reduce((acc, curr) => acc + (Number(curr.storePoints) || 0), 0);
+
+            // Paginação da tabela
+            const historyTotalPages = Math.ceil(playerHistory.length / historyItemsPerPage);
+            const currentHistory = playerHistory.slice((historyPage - 1) * historyItemsPerPage, historyPage * historyItemsPerPage);
+
+            const handleHistoryPageChange = (val) => {
+                if (val >= 1 && val <= historyTotalPages) {
+                    setHistoryPage(val);
+                    // Removido scroll to top
+                }
+            };
+
+            return (
+                <div className="profile-view">
+                    {/* Header Card */}
+                    <div className="profile-header-card">
+                        <div className="profile-banner" style={{backgroundImage: `url(https://i.imgur.com/w1pLw9M.jpeg)`}}></div>
+                        <button className="back-btn" onClick={onBack}>
+                            <Icons.ChevronLeft /> Voltar
+                        </button>
+                        
+                        <div className="profile-info-row">
+                            <img src={profile.image || 'https://i.imgur.com/7Y5j5zW.png'} className="profile-avatar-large" alt={profile.nickname} />
+                            <div className="profile-texts">
+                                <h2>{profile.nickname}</h2>
+                                <p>@{profile.username}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="profile-stats-grid">
+                        <div className="p-stat-card">
+                            <h4>Pontos Totais</h4>
+                            <div className="val text-yellow-400">{profile.total_points}</div>
+                        </div>
+                        <div className="p-stat-card">
+                            <h4>Aulas Totais</h4>
+                            <div className="val">{profile.total_participations}</div>
+                        </div>
+                        <div className="p-stat-card">
+                            <h4>DGs Totais</h4>
+                            <div className="val text-blue-500">{totalDgsCalc}</div>
+                        </div>
+                        <div className="p-stat-card">
+                            <h4>Pontos de Cantina</h4>
+                            <div className="val" style={{color: '#f472b6'}}>{profile.oinc_points || 0}</div>
+                        </div>
+                    </div>
+
+                    {/* Split Layout */}
+                    <div className="profile-content-split">
+                        
+                        {/* Esquerda: Classes */}
+                        <div className="profile-left-col">
+                            <div className="profile-section-title" style={{marginBottom: 10}}>
+                                <span>Classes</span>
+                            </div>
+                            <div className="classes-list">
+                                {sortedElos.map((item, idx) => (
+                                    <div key={idx} className="elo-card-small">
+                                        <div className="elo-icon-small">{item.elo.current.icon || '🛡️'}</div>
+                                        <div className="elo-info-small">
+                                            <div className="elo-role-name-small">
+                                                <RoleBadge role={item.role} />
+                                            </div>
+                                            <div className="elo-rank-small">
+                                                <span>{item.elo.current.name}</span>
+                                                <span style={{color: 'var(--accent)', fontWeight: 'bold'}}>{item.points} pts</span>
+                                            </div>
+                                            <div className="elo-progress-bg" style={{marginTop: 6, height: 3}}>
+                                                <div className={`elo-progress-fill ${item.elo.current.color}`} style={{width: `${item.elo.progress}%`}}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Direita: Histórico */}
+                        <div className="profile-right-col" id="profile-history-top">
+                            <div className="profile-section-title" style={{marginBottom: 10}}>
+                                <span>Histórico de Aulas</span>
+                            </div>
+
+                            <div className="players-table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nome da Aula</th>
+                                            <th>Role</th>
+                                            <th style={{textAlign: 'right'}}>Pontos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {currentHistory.map((dg, idx) => (
+                                            <tr key={idx}>
+                                                <td>
+                                                    <div style={{fontWeight: '500', color: '#fff'}}>{dg.name}</div>
+                                                    <div style={{color: '#888', fontSize: '0.8rem', marginTop: 4}}>{formatDate(dg.date)}</div>
+                                                </td>
+                                                <td><RoleBadge role={dg.role} /></td>
+                                                <td style={{textAlign: 'right', fontWeight: 'bold', color: 'var(--accent)'}}>+{dg.points}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                
+                                {historyTotalPages > 1 && (
+                                    <div className="pagination" style={{padding: '20px', justifyContent: 'center'}}>
+                                        <button className="page-btn" disabled={historyPage === 1} onClick={() => handleHistoryPageChange(historyPage - 1)}>
+                                            <Icons.ChevronLeft />
+                                        </button>
+                                        <span style={{color: '#888'}}>
+                                            Página <b style={{color: '#fff'}}>{historyPage}</b> de {historyTotalPages}
+                                        </span>
+                                        <button className="page-btn" disabled={historyPage === historyTotalPages} onClick={() => handleHistoryPageChange(historyPage + 1)}>
+                                            <Icons.ChevronRight />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div style={{height: 40}}></div>
+                </div>
+            );
+        };
+
+        // --- Modal de Aula (Dungeon) ---
+        const DungeonModal = ({ data, onClose }) => {
             if (!data) return null;
 
-            // Calcular o máximo de DGs com base no maior valor de 'storePoints'
-            const maxDgs = data.players && data.players.length > 0 
-                ? Math.max(...data.players.map(p => Number(p.storePoints) || 0)) 
+            // Ordenar jogadores por Dano (Maior para Menor)
+            const sortedPlayers = React.useMemo(() => {
+                if (!data.players) return [];
+                return [...data.players].sort((a, b) => parseDamage(b.damage) - parseDamage(a.damage));
+            }, [data.players]);
+
+            // Calcular o máximo de DGs para exibir no cabeçalho
+            const maxDgs = sortedPlayers.length > 0 
+                ? Math.max(...sortedPlayers.map(p => Number(p.storePoints) || 0)) 
                 : 0;
+            
+            // Top DPS é sempre o primeiro da lista ordenada
+            const topDPSPlayer = sortedPlayers.length > 0 ? sortedPlayers[0] : null;
+            
+            // Dano Máximo da sessão (para cálculo da barra relativa) é o dano do primeiro
+            const sessionMaxDamage = topDPSPlayer ? parseDamage(topDPSPlayer.damage) : 1;
 
             return (
                 <div className="modal-overlay" onClick={onClose}>
@@ -611,7 +769,7 @@
                                 </h2>
                                 <p style={{color: 'var(--text-secondary)', marginTop: '5px', fontSize: '0.9rem'}}>{formatDate(data.date)}</p>
                             </div>
-                            <button onClick={onClose} style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer'}}>
+                            <button onClick={onClose} style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer', flexShrink: 0}}>
                                 <Icons.X />
                             </button>
                         </div>
@@ -619,7 +777,7 @@
                             <div className="stats-grid">
                                 <div className="stat-box">
                                     <div style={{color: 'var(--text-secondary)', fontSize: '0.85rem'}}>Total Alunos</div>
-                                    <div className="stat-val">{data.players?.length || 0}</div>
+                                    <div className="stat-val">{sortedPlayers.length}</div>
                                 </div>
                                 <div className="stat-box">
                                     <div style={{color: 'var(--text-secondary)', fontSize: '0.85rem'}}>DGs Realizadas</div>
@@ -628,51 +786,66 @@
                                 <div className="stat-box">
                                     <div style={{color: 'var(--text-secondary)', fontSize: '0.85rem'}}>Pontos Distribuídos</div>
                                     <div className="stat-val" style={{color: 'var(--accent)'}}>
-                                        {data.players ? data.players.reduce((acc, p) => acc + (p.points || 0), 0) : 0}
-                                    </div>
-                                </div>
-                                <div className="stat-box">
-                                    <div style={{color: 'var(--text-secondary)', fontSize: '0.85rem'}}>Top DPS</div>
-                                    <div className="stat-val" style={{fontSize: '1.1rem', color: '#ef4444'}}>
-                                         {data.players && data.players.length > 0 
-                                            ? data.players.reduce((max, p) => parseInt(p.damage || 0) > parseInt(max.damage || 0) ? p : max).nick 
-                                            : 'N/A'}
+                                        {sortedPlayers.reduce((acc, p) => acc + (Number(p.points) || 0), 0)}
                                     </div>
                                 </div>
                             </div>
 
                             <h3 style={{color: '#fff', marginBottom: '15px', display: 'flex', gap: '10px'}}>
-                                <Icons.History /> Performance
+                                <Icons.History /> Dados
                             </h3>
                             
                             <div className="players-table-container">
                                 <table>
                                     <thead>
                                         <tr>
+                                            <th style={{width: '50px', textAlign: 'center'}}>#</th>
                                             <th>Aluno</th>
                                             <th>Role</th>
                                             <th style={{textAlign: 'right'}}>Dano</th>
-                                            <th style={{textAlign: 'center'}}>Pontos</th>
-                                            <th style={{width: '30%'}}>Contribuição</th>
+                                            <th style={{textAlign: 'center'}}>Pts</th>
+                                            <th style={{textAlign: 'center'}}>Part.</th>
+                                            <th style={{width: '35%'}}>DANO %</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.players?.map((player, idx) => (
-                                            <tr key={idx}>
-                                                <td style={{fontWeight: '500'}}>{player.nick}</td>
-                                                <td><span style={{background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem'}}>{player.role}</span></td>
-                                                <td style={{textAlign: 'right', fontFamily: 'monospace'}}>{parseInt(player.damage).toLocaleString('pt-PT')}</td>
-                                                <td style={{textAlign: 'center', color: 'var(--accent)', fontWeight: 'bold'}}>{player.points}</td>
-                                                <td>
-                                                    <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                                        <div className="progress-bg">
-                                                            <div className="progress-fill" style={{width: player.maxPercentage}}></div>
+                                        {sortedPlayers.map((player, idx) => {
+                                            const currentDamage = parseDamage(player.damage);
+                                            // Cálculo da barra relativo ao Maior Dano da sala (DPS Meter Style)
+                                            const barWidth = sessionMaxDamage > 0 ? (currentDamage / sessionMaxDamage) * 100 : 0;
+                                            const isTopDPS = idx === 0; // O primeiro da lista é o Top DPS
+
+                                            return (
+                                                <tr key={idx}>
+                                                    <td style={{textAlign: 'center', color: '#666', fontWeight: 'bold'}}>{idx + 1}</td>
+                                                    <td style={{fontWeight: '500', color: isTopDPS ? 'var(--accent)' : '#fff'}}>
+                                                        {isTopDPS && '👑 '} {player.nick}
+                                                    </td>
+                                                    <td>
+                                                        <RoleBadge role={player.role} />
+                                                    </td>
+                                                    <td style={{textAlign: 'right', fontFamily: 'monospace', color: isTopDPS ? '#fff' : '#ccc', fontWeight: isTopDPS ? 'bold' : 'normal'}}>
+                                                        {parseInt(player.damage).toLocaleString('pt-PT')}
+                                                    </td>
+                                                    <td style={{textAlign: 'center', color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                                        {player.points}
+                                                    </td>
+                                                    <td style={{textAlign: 'center', color: '#3b82f6', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                                        {player.storePoints || 0}
+                                                    </td>
+                                                    <td>
+                                                        <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+                                                            <div className="progress-bar-container">
+                                                                <div className="progress-bar-fill" style={{width: `${barWidth}%`}}></div>
+                                                            </div>
+                                                            <span style={{fontSize: '0.85rem', color: '#fff', fontWeight: 'bold', minWidth: '40px', textAlign: 'right'}}>
+                                                                {player.maxPercentage}
+                                                            </span>
                                                         </div>
-                                                        <span style={{fontSize: '0.75rem', color: '#999', width: '35px'}}>{player.maxPercentage}</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
@@ -683,75 +856,82 @@
         };
 
         const App = () => {
-            const [dgs, setDgs] = React.useState([]);
-            const [loading, setLoading] = React.useState(true);
-            const [error, setError] = React.useState(null);
-            const [selectedDg, setSelectedDg] = React.useState(null);
-            const [mobileOpen, setMobileOpen] = React.useState(false);
-            const [currentPage, setCurrentPage] = React.useState(1);
-            const [isCollapsed, setIsCollapsed] = React.useState(false);
-            const [itemsPerPage, setItemsPerPage] = React.useState(getDynamicItemsPerPage());
+            const [activeTab, setActiveTab] = React.useState('history'); // history | ranking | profile
             
-            // Filtros
+            // Dados DGS
+            const [dgs, setDgs] = React.useState([]);
+            const [loadingDgs, setLoadingDgs] = React.useState(true);
+            const [selectedDg, setSelectedDg] = React.useState(null);
+            
+            // Dados Profiles (Ranking)
+            const [profiles, setProfiles] = React.useState([]);
+            const [loadingProfiles, setLoadingProfiles] = React.useState(false);
+            const [selectedProfile, setSelectedProfile] = React.useState(null);
+            const [sortConfig, setSortConfig] = React.useState({ key: 'total_points', direction: 'desc' });
+
+            // UI
+            const [error, setError] = React.useState(null);
+            const [mobileOpen, setMobileOpen] = React.useState(false);
+            const [isCollapsed, setIsCollapsed] = React.useState(false);
+            
+            // Paginação DGS
+            const [currentPage, setCurrentPage] = React.useState(1);
+            const [itemsPerPage, setItemsPerPage] = React.useState(getDynamicItemsPerPage());
             const [searchTerm, setSearchTerm] = React.useState('');
             const [dateFilter, setDateFilter] = React.useState('');
 
-            // Efeito para ajustar paginação ao redimensionar
+            // Efeito Resize
             React.useEffect(() => {
-                const handleResize = () => {
-                    setItemsPerPage(getDynamicItemsPerPage());
-                };
-                
+                const handleResize = () => setItemsPerPage(getDynamicItemsPerPage());
                 window.addEventListener('resize', handleResize);
                 return () => window.removeEventListener('resize', handleResize);
             }, []);
 
+            // Fetch DGS (Histórico)
             React.useEffect(() => {
                 const fetchDgs = async () => {
                     let allData = [];
                     let page = 0;
                     const pageSize = 1000;
                     let hasMore = true;
-
                     try {
                         while (hasMore) {
                             const offset = page * pageSize;
                             const params = new URLSearchParams({
-                                select: '*',
-                                order: 'date.desc',
-                                limit: pageSize,
-                                offset: offset,
-                                apikey: API_KEY
+                                select: '*', order: 'date.desc', limit: pageSize, offset: offset, apikey: DGS_API_KEY
                             });
-
-                            const response = await fetch(`${SUPABASE_URL}?${params.toString()}`);
-                            if (!response.ok) throw new Error('Falha ao conectar à API');
-                            
+                            const response = await fetch(`${DGS_API_URL}?${params.toString()}`);
+                            if (!response.ok) throw new Error('Falha API DGs');
                             const data = await response.json();
-                            
                             if (data.length > 0) {
                                 allData = [...allData, ...data];
-                                if (data.length < pageSize) {
-                                    hasMore = false;
-                                } else {
-                                    page++;
-                                }
-                            } else {
-                                hasMore = false;
-                            }
+                                if (data.length < pageSize) hasMore = false; else page++;
+                            } else hasMore = false;
                         }
                         setDgs(allData);
-                    } catch (err) {
-                        setError('Erro ao carregar histórico: ' + err.message);
-                        console.error(err);
-                    } finally {
-                        setLoading(false);
-                    }
+                    } catch (err) { console.error(err); setError('Erro ao carregar aulas.'); } finally { setLoadingDgs(false); }
                 };
                 fetchDgs();
             }, []);
 
-            // Lógica de Filtro
+            // Fetch Profiles (Ranking) - Só busca se mudar para aba Ranking
+            React.useEffect(() => {
+                if (activeTab === 'ranking' && profiles.length === 0) {
+                    const fetchProfiles = async () => {
+                        setLoadingProfiles(true);
+                        try {
+                            const params = new URLSearchParams({ limit: 1000, apikey: PROFILES_API_KEY });
+                            const response = await fetch(`${PROFILES_API_URL}?${params.toString()}`);
+                            if (!response.ok) throw new Error('Falha API Perfis');
+                            const data = await response.json();
+                            setProfiles(data);
+                        } catch (err) { console.error(err); setError('Erro ao carregar ranking.'); } finally { setLoadingProfiles(false); }
+                    };
+                    fetchProfiles();
+                }
+            }, [activeTab]);
+
+            // Lógica de Filtro e Paginação DGS
             const filteredDgs = React.useMemo(() => {
                 return dgs.filter(dg => {
                     const matchesName = dg.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -760,175 +940,179 @@
                 });
             }, [dgs, searchTerm, dateFilter]);
 
-            // Resetar página quando filtros mudam
-            React.useEffect(() => {
-                setCurrentPage(1);
-            }, [searchTerm, dateFilter]);
+            React.useEffect(() => { setCurrentPage(1); }, [searchTerm, dateFilter]);
+            const dgsTotalPages = Math.ceil(filteredDgs.length / itemsPerPage);
+            const currentDgs = filteredDgs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-            const totalPages = Math.ceil(filteredDgs.length / itemsPerPage);
-            const currentItems = filteredDgs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+            // Lógica de Ordenação Ranking
+            const sortedProfiles = React.useMemo(() => {
+                let sortable = [...profiles];
+                sortable.sort((a, b) => {
+                    if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+                    if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+                return sortable;
+            }, [profiles, sortConfig]);
 
-            const handlePageChange = (val) => {
-                if(val >= 1 && val <= totalPages) {
-                    setCurrentPage(val);
-                    document.getElementById('list-top').scrollIntoView({ behavior: 'smooth' });
-                }
+            const handleSort = (key) => {
+                let direction = 'desc';
+                if (sortConfig.key === key && sortConfig.direction === 'desc') direction = 'asc';
+                setSortConfig({ key, direction });
             };
 
-            const clearFilters = () => {
-                setSearchTerm('');
-                setDateFilter('');
+            const handleOpenProfile = (profile) => {
+                setSelectedProfile(profile);
+                setActiveTab('profile'); // Troca a view inteira
+            };
+
+            const handleBackToRanking = () => {
+                setSelectedProfile(null);
+                setActiveTab('ranking');
             };
 
             return (
                 <div className="app-container">
-                    <div className="ambient-light">
-                        <div className="orb orb-1"></div>
-                        <div className="orb orb-2"></div>
-                    </div>
-
-                    {/* Mobile Overlay */}
+                    <div className="ambient-light"><div className="orb orb-1"></div><div className="orb orb-2"></div></div>
                     {mobileOpen && <div className="modal-overlay" style={{zIndex: 40}} onClick={() => setMobileOpen(false)}></div>}
 
                     {/* Sidebar */}
                     <aside className={`sidebar ${mobileOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
                         <div className="sidebar-header" style={{ justifyContent: isCollapsed ? 'center' : 'space-between', padding: isCollapsed ? '0' : '0 20px' }}>
-                            {/* Conteúdo Expandido */}
                             {!isCollapsed && (
                                 <>
                                     <div style={{animation: 'fadeIn 0.3s'}}>
                                         <div style={{color: '#fff', fontWeight: 'bold', lineHeight: '1'}}>ESCOLINHA</div>
                                         <div style={{color: 'var(--accent)', fontWeight: 'bold', lineHeight: '1'}}>AVALON</div>
                                     </div>
-                                    <button 
-                                        className="header-toggle-btn"
-                                        onClick={() => setIsCollapsed(true)}
-                                        title="Recolher Menu"
-                                    >
-                                        <Icons.ChevronLeft />
-                                    </button>
+                                    <button className="header-toggle-btn" onClick={() => setIsCollapsed(true)}><Icons.ChevronLeft /></button>
                                 </>
                             )}
-                            
-                            {/* Conteúdo Recolhido */}
                             {isCollapsed && (
-                                <button 
-                                    onClick={() => setIsCollapsed(false)}
-                                    title="Expandir Menu"
-                                    style={{
-                                        width: '40px', height: '40px', 
-                                        background: 'var(--accent)', 
-                                        borderRadius: '8px', 
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                                        color: '#000', border: 'none', cursor: 'pointer',
-                                        boxShadow: '0 0 10px var(--accent-glow)'
-                                    }}
-                                >
-                                    <Icons.ChevronRight />
-                                </button>
+                                <button onClick={() => setIsCollapsed(false)} style={{width: '40px', height: '40px', background: 'var(--accent)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', border: 'none', cursor: 'pointer', boxShadow: '0 0 10px var(--accent-glow)'}}><Icons.ChevronRight /></button>
                             )}
                         </div>
 
                         <nav className="nav-items">
-                            <button className="nav-btn active" title="Histórico de Aulas">
-                                <Icons.History width={20} /> 
-                                <span className="nav-text">Histórico de Aulas</span>
+                            <button className={`nav-btn ${activeTab === 'history' ? 'active' : ''}`} onClick={() => {setActiveTab('history'); setMobileOpen(false);}}>
+                                <Icons.History width={20} /> <span className="nav-text">Histórico de Aulas</span>
+                            </button>
+                            <button className={`nav-btn ${activeTab === 'ranking' || activeTab === 'profile' ? 'active' : ''}`} onClick={() => {setActiveTab('ranking'); setMobileOpen(false);}}>
+                                <Icons.Ranking width={20} /> <span className="nav-text">Ranking Geral</span>
                             </button>
                         </nav>
                         
-                        {/* Rodapé */}
-                        <div className="footer-text" style={{padding: '0 20px 20px'}}>
-                            &copy; 2025 Avalon
-                        </div>
+                        <div className="footer-text" style={{padding: '0 20px 20px'}}>&copy; 2025 Avalon</div>
                     </aside>
 
                     {/* Main Content */}
                     <main className="main-content">
                         <div className="top-bar-mobile">
                             <div style={{fontWeight: 'bold', color: '#fff'}}>AVALON</div>
-                            <button onClick={() => setMobileOpen(true)} style={{background: 'none', border: 'none', color: '#fff'}}>
-                                <Icons.Menu />
-                            </button>
+                            <button onClick={() => setMobileOpen(true)} style={{background: 'none', border: 'none', color: '#fff'}}><Icons.Menu /></button>
                         </div>
 
                         <div className="content-scroll" id="list-top">
-                            <div className="section-header">
-                                <div>
-                                    <h1 className="title-large">
-                                        Histórico de <span className="title-accent">Aulas</span>
-                                    </h1>
-                                    <p style={{color: '#888', marginTop: '4px', fontSize: '0.9rem'}}>
-                                        Total de aulas realizadas: <span style={{color: '#fff', fontWeight: 'bold'}}>{filteredDgs.length}</span>
-                                        {dgs.length !== filteredDgs.length && <span style={{fontSize: '0.8rem', marginLeft: '5px', opacity: 0.7}}>(de {dgs.length})</span>}
-                                    </p>
-                                </div>
-                                {/* Badge de Online Removido */}
-                            </div>
-                            
-                            {/* Barra de Filtros */}
-                            {!loading && !error && (
-                                <div className="filters-bar">
-                                    <div className="filter-input-group">
-                                        <div className="filter-icon"><Icons.Search style={{width: 18}}/></div>
-                                        <input 
-                                            type="text" 
-                                            className="filter-input" 
-                                            placeholder="Pesquisar por nome..." 
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
+                            {/* Header Comum (exceto no Perfil que tem header próprio) */}
+                            {activeTab !== 'profile' && (
+                                <div className="section-header">
+                                    <div>
+                                        <h1 className="title-large">
+                                            {activeTab === 'history' ? 'Histórico de ' : 'Ranking '} 
+                                            <span className="title-accent">{activeTab === 'history' ? 'Aulas' : 'Alunos'}</span>
+                                        </h1>
+                                        {activeTab === 'history' && (
+                                            <p style={{color: '#888', marginTop: '4px', fontSize: '0.9rem'}}>Total de aulas: <span style={{color: '#fff', fontWeight: 'bold'}}>{filteredDgs.length}</span></p>
+                                        )}
                                     </div>
-                                    <div className="filter-input-group date-input-group" style={{maxWidth: '220px'}}>
-                                        <input 
-                                            type="date" 
-                                            className="filter-input" 
-                                            value={dateFilter}
-                                            onChange={(e) => setDateFilter(e.target.value)}
-                                        />
-                                    </div>
-                                    {(searchTerm || dateFilter) && (
-                                        <button className="clear-btn" onClick={clearFilters}>
-                                            <Icons.X style={{width: 16, marginRight: 6}} /> Limpar
-                                        </button>
-                                    )}
                                 </div>
                             )}
-
-                            {error && <div style={{color: 'red', padding: '20px', background: 'rgba(255,0,0,0.1)', borderRadius: '10px'}}>{error}</div>}
-
-                            <div className="cards-grid">
-                                {loading ? (
-                                    Array(8).fill(0).map((_, i) => <SkeletonCard key={i} />)
-                                ) : (
-                                    currentItems.length > 0 ? (
-                                        currentItems.map(dg => (
-                                            <Card key={dg.id} data={dg} onClick={setSelectedDg} />
-                                        ))
-                                    ) : (
-                                        <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#666'}}>
-                                            Nenhuma aula encontrada com estes filtros.
+                            
+                            {/* --- VIEW: HISTÓRICO --- */}
+                            {activeTab === 'history' && (
+                                <>
+                                    {!loadingDgs && (
+                                        <div className="filters-bar">
+                                            <div className="filter-input-group">
+                                                <div className="filter-icon"><Icons.Search style={{width: 18}}/></div>
+                                                <input type="text" className="filter-input" placeholder="Pesquisar por nome..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                                            </div>
+                                            <div className="filter-input-group date-input-group" style={{maxWidth: '220px'}}>
+                                                <input type="date" className="filter-input" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
+                                            </div>
+                                            {(searchTerm || dateFilter) && <button className="clear-btn" onClick={() => {setSearchTerm(''); setDateFilter('');}}><Icons.X style={{width: 16, marginRight: 6}} /> Limpar</button>}
                                         </div>
-                                    )
-                                )}
-                            </div>
+                                    )}
 
-                            {!loading && !error && currentItems.length > 0 && (
-                                <div className="pagination">
-                                    <button className="page-btn" disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-                                        <Icons.ChevronLeft />
-                                    </button>
-                                    <span style={{color: '#888'}}>
-                                        Página <b style={{color: '#fff'}}>{currentPage}</b> de {totalPages}
-                                    </span>
-                                    <button className="page-btn" disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-                                        <Icons.ChevronRight />
-                                    </button>
-                                </div>
+                                    <div className="cards-grid">
+                                        {loadingDgs ? Array(8).fill(0).map((_, i) => <SkeletonCard key={i} />) : 
+                                            currentDgs.length > 0 ? currentDgs.map(dg => <Card key={dg.id} data={dg} onClick={setSelectedDg} />) : 
+                                            <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#666'}}>Nenhuma aula encontrada.</div>
+                                        }
+                                    </div>
+
+                                    {!loadingDgs && currentDgs.length > 0 && (
+                                        <div className="pagination">
+                                            <button className="page-btn" disabled={currentPage === 1} onClick={() => {setCurrentPage(p => p - 1); document.getElementById('list-top').scrollIntoView({ behavior: 'smooth' });}}><Icons.ChevronLeft /></button>
+                                            <span style={{color: '#888'}}>Página <b style={{color: '#fff'}}>{currentPage}</b> de {dgsTotalPages}</span>
+                                            <button className="page-btn" disabled={currentPage === dgsTotalPages} onClick={() => {setCurrentPage(p => p + 1); document.getElementById('list-top').scrollIntoView({ behavior: 'smooth' });}}><Icons.ChevronRight /></button>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            {/* --- VIEW: RANKING --- */}
+                            {activeTab === 'ranking' && (
+                                <>
+                                    {loadingProfiles ? <div style={{textAlign: 'center', padding: 40, color: '#888'}}>Carregando Ranking...</div> : (
+                                        <div className="ranking-table-container">
+                                            <table className="ranking-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style={{width: 60, textAlign: 'center'}}>#</th>
+                                                        <th>Aluno</th>
+                                                        <th onClick={() => handleSort('total_points')} style={{cursor: 'pointer', color: sortConfig.key === 'total_points' ? 'var(--accent)' : ''}}>Pontos Totais ↕</th>
+                                                        <th onClick={() => handleSort('total_participations')} style={{cursor: 'pointer', color: sortConfig.key === 'total_participations' ? 'var(--accent)' : ''}}>Aulas Totais ↕</th>
+                                                        <th>Main Role</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {sortedProfiles.map((profile, idx) => (
+                                                        <tr key={profile.id} onClick={() => handleOpenProfile(profile)}>
+                                                            <td className={`rank-number rank-top-${idx + 1}`}>{idx + 1}</td>
+                                                            <td>
+                                                                <div className="player-cell">
+                                                                    <img src={profile.image || 'https://i.imgur.com/7Y5j5zW.png'} className="player-avatar-small" />
+                                                                    <div>
+                                                                        <div style={{fontWeight: '600', color: '#fff'}}>{profile.nickname}</div>
+                                                                        <div style={{fontSize: '0.75rem', color: '#666'}}>@{profile.username}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td style={{fontWeight: '700', color: 'var(--accent)'}}>{profile.total_points}</td>
+                                                            <td>{profile.total_participations}</td>
+                                                            <td>
+                                                                <span style={{background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center'}}>
+                                                                    <RoleBadge role={profile.most_frequent_role} />
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+
+                            {/* --- VIEW: PROFILE (APP LIKE) --- */}
+                            {activeTab === 'profile' && selectedProfile && (
+                                <UserProfileView profile={selectedProfile} allDgs={dgs} onBack={handleBackToRanking} />
                             )}
                         </div>
                     </main>
 
-                    <Modal data={selectedDg} onClose={() => setSelectedDg(null)} />
+                    <DungeonModal data={selectedDg} onClose={() => setSelectedDg(null)} />
                 </div>
             );
         };
