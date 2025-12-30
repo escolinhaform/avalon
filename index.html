@@ -187,88 +187,6 @@
         }
         .clear-btn:hover { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
 
-        /* --- Ranking Filter Tabs --- */
-        .ranking-filters {
-            display: flex; gap: 8px; background: rgba(0,0,0,0.4); padding: 6px;
-            border-radius: 16px; border: 1px solid var(--glass-border);
-        }
-        .rank-filter-btn {
-            padding: 8px 20px; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
-            cursor: pointer; transition: all 0.3s; border: 1px solid transparent; color: var(--text-secondary);
-            background: transparent;
-        }
-        .rank-filter-btn.active {
-            background: rgba(250, 204, 21, 0.15); color: var(--accent); border-color: rgba(250, 204, 21, 0.3);
-            box-shadow: 0 0 20px rgba(250, 204, 21, 0.1);
-        }
-        .rank-filter-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
-
-        /* --- Top 3 Cards (Podium Style) --- */
-        .top-three-container {
-            display: flex; justify-content: center; align-items: flex-end; gap: 24px;
-            margin-bottom: 60px; max-width: 1000px; margin-left: auto; margin-right: auto;
-            flex-wrap: wrap; perspective: 1000px;
-        }
-        .top-card {
-            position: relative; border-radius: 24px; overflow: hidden;
-            border: 1px solid var(--glass-border);
-            display: flex; flex-direction: column; align-items: center;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            background: #000;
-        }
-        .top-card:hover { transform: translateY(-10px) scale(1.02); z-index: 20; }
-        
-        /* Background GIF/Image */
-        .top-card-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 0.6;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.2) 100%);
-            transition: opacity 0.3s; filter: grayscale(40%);
-        }
-        .top-card:hover .top-card-bg { opacity: 0.8; filter: grayscale(0%); }
-        .top-card::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to top, #000 0%, transparent 80%);
-            z-index: 1;
-        }
-
-        .top-card-content {
-            position: relative; z-index: 2; width: 100%; height: 100%;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 20px;
-        }
-
-        .top-card.rank-1 { width: 300px; height: 420px; order: 2; border-color: rgba(250, 204, 21, 0.6); box-shadow: 0 0 50px rgba(250, 204, 21, 0.15); }
-        .top-card.rank-2 { width: 260px; height: 360px; order: 1; border-color: rgba(229, 231, 235, 0.4); }
-        .top-card.rank-3 { width: 260px; height: 360px; order: 3; border-color: rgba(180, 83, 9, 0.4); }
-        
-        .top-avatar {
-            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
-            border: 4px solid rgba(30,30,30,1); box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            margin-top: 40px; margin-bottom: 15px; transition: transform 0.3s;
-        }
-        .rank-1 .top-avatar { width: 130px; height: 130px; border-color: var(--accent); }
-        .top-card:hover .top-avatar { transform: scale(1.05); }
-
-        .rank-badge {
-            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 1.2rem; color: #000; position: absolute; top: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 10;
-        }
-        .rank-1 .rank-badge { background: #fbbf24; width: 50px; height: 50px; font-size: 1.5rem; top: 15px; }
-        .rank-2 .rank-badge { background: #e5e7eb; left: 20px; }
-        .rank-3 .rank-badge { background: #b45309; color: #fff; right: 20px; }
-        
-        .top-info { text-align: center; width: 100%; margin-top: auto; padding-bottom: 20px; }
-        .top-name { font-weight: 800; color: #fff; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .rank-1 .top-name { font-size: 1.8rem; color: var(--accent); }
-        .rank-2 .top-name, .rank-3 .top-name { font-size: 1.4rem; }
-        
-        .top-stats { display: flex; flex-direction: column; gap: 4px; align-items: center; }
-        .top-points { font-family: monospace; font-weight: 800; color: #fff; font-size: 1.1rem; background: rgba(250,204,21,0.2); padding: 4px 16px; border-radius: 20px; border: 1px solid rgba(250,204,21,0.4); backdrop-filter: blur(5px); }
-        .top-dgs { font-size: 0.8rem; color: #ccc; }
-
         /* --- Cards --- */
         .cards-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -334,53 +252,27 @@
         .player-cell { display: flex; align-items: center; gap: 12px; }
         .player-avatar-small { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border); }
         
-        /* --- Profile View (App Like) - Refactored for Stability --- */
+        /* --- Profile View (App Like) --- */
         .profile-view {
             animation: fadeIn 0.3s ease-out;
             width: 100%; max-width: 1400px; margin: 0 auto;
-            padding-bottom: 40px;
         }
         .profile-header-card {
             position: relative; border-radius: 20px; overflow: hidden;
-            background: rgba(20,20,20,0.6); backdrop-filter: blur(20px);
+            background: linear-gradient(180deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
             border: 1px solid var(--glass-border); margin-bottom: 30px;
-            display: flex; flex-direction: column;
         }
-        .profile-banner {
-            height: 200px; width: 100%; background-size: cover; background-position: center;
-            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        .profile-banner { height: 220px; width: 100%; background-size: cover; background-position: center; opacity: 0.6; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); }
+        .profile-info-row {
+            display: flex; align-items: flex-end; padding: 0 40px 30px; margin-top: -80px; position: relative; gap: 30px;
         }
-        
-        .profile-header-content {
-            padding: 0 40px 30px;
-            margin-top: -60px; /* Overlap amount */
-            display: flex;
-            align-items: flex-end;
-            gap: 25px;
-            position: relative;
-            z-index: 2;
-        }
-        
         .profile-avatar-large {
-            width: 130px; height: 130px; border-radius: 50%; 
-            border: 5px solid #0a0a0a; /* Match background to look like a cutout */
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5); 
-            background: #222; object-fit: cover;
-            flex-shrink: 0;
+            width: 140px; height: 140px; border-radius: 50%; border: 6px solid #0a0a0a;
+            box-shadow: 0 0 30px rgba(0,0,0,0.6); background: #222; object-fit: cover;
         }
-        
-        .profile-texts {
-            margin-bottom: 10px; /* Align with bottom of avatar */
-        }
-        .profile-texts h2 { 
-            font-size: 2.2rem; color: #fff; font-weight: 800; 
-            margin: 0; line-height: 1.1; 
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-        .profile-texts p { 
-            color: var(--accent); font-size: 1rem; margin: 4px 0 0; 
-            font-weight: 600; opacity: 0.9;
-        }
+        .profile-texts { flex: 1; margin-bottom: 10px; }
+        .profile-texts h2 { font-size: 2.5rem; color: #fff; font-weight: 800; margin: 0; line-height: 1.1; }
+        .profile-texts p { color: var(--accent); font-size: 1.1rem; margin: 0; opacity: 0.9; }
         
         .back-btn {
             position: absolute; top: 20px; right: 20px;
@@ -530,20 +422,12 @@
             .content-scroll { padding: 20px; }
             .title-large { font-size: 1.5rem; }
             .filters-bar { flex-direction: column; align-items: stretch; }
-            
-            /* Profile Mobile */
-            .profile-header-content { flex-direction: column; align-items: center; text-align: center; margin-top: -60px; }
-            .profile-avatar-large { margin-bottom: 15px; border-width: 4px; width: 110px; height: 110px; }
-            .profile-texts { margin-bottom: 0; }
-            
+            .profile-info-row { flex-direction: column; text-align: center; align-items: center; margin-top: -60px; }
+            .profile-avatar-large { width: 120px; height: 120px; margin-bottom: 10px; }
             .profile-stats-grid { grid-template-columns: 1fr 1fr; }
             /* Mobile Split Layout Fix */
             .profile-content-split { grid-template-columns: 1fr; gap: 40px; }
             .profile-left-col { order: 2; }
-            .top-three-container { flex-direction: column; align-items: center; }
-            .top-card.rank-1 { order: 1; width: 100%; max-width: 300px; }
-            .top-card.rank-2 { order: 2; width: 100%; max-width: 300px; }
-            .top-card.rank-3 { order: 3; width: 100%; max-width: 300px; }
         }
 
         /* Animações CSS */
@@ -595,7 +479,7 @@
             return (
                 <span className="role-badge" style={{background: 'rgba(255,255,255,0.1)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', whiteSpace: 'nowrap'}}>
                     {iconUrl && <img src={iconUrl} className="role-icon-img" alt="" />}
-                    {role || 'N/A'}
+                    {role}
                 </span>
             );
         };
@@ -624,8 +508,6 @@
         const PROFILES_API_URL = "https://kswvirdheurkykcqbokv.supabase.co/rest/v1/players_profiles";
         const PROFILES_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzd3ZpcmRoZXVya3lrY3Fib2t2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Njk0NTIwOCwiZXhwIjoyMDgyNTIxMjA4fQ.5CnziP68971KRQi7_j41oWAJ_asrSBncZiLLcIMxYfk";
 
-        const DEFAULT_AVATAR = "https://i.imgur.com/7Y5j5zW.png";
-
         // --- Helpers ---
         const getDynamicItemsPerPage = () => {
             const width = window.innerWidth;
@@ -648,16 +530,6 @@
             if (typeof val === 'number') return val;
             if (!val) return 0;
             return parseInt(val.toString().replace(/\./g, '')) || 0;
-        };
-
-        // Valida se a imagem é um formato suportado
-        const isValidImage = (url) => {
-            if (!url) return false;
-            return /\.(gif|jpg|jpeg|png|webp)$/i.test(url);
-        };
-
-        const getSafeImage = (url) => {
-            return isValidImage(url) ? url : DEFAULT_AVATAR;
         };
 
         // --- Componentes ---
@@ -704,17 +576,23 @@
             // Sort by points desc
             const sortedElos = [...elos].sort((a, b) => b.points - a.points);
             
+            // -------------------------------------------------------------
             // LÓGICA DE CÁLCULO REAL USANDO TODO O HISTÓRICO (allDgs)
+            // -------------------------------------------------------------
             const playerHistory = React.useMemo(() => {
                 if (!allDgs || allDgs.length === 0) return [];
+                
+                // Encontrar todas as DGs onde o jogador participou
                 const history = [];
                 const targetNick = profile.nickname.toLowerCase();
+
                 allDgs.forEach(dg => {
                     if (dg.players) {
                         const playerData = dg.players.find(p => p.nick && p.nick.toLowerCase() === targetNick);
                         if (playerData) {
                             history.push({
                                 ...dg,
+                                // Dados específicos da participação nesta DG
                                 role: playerData.role,
                                 points: playerData.points,
                                 storePoints: playerData.storePoints
@@ -722,25 +600,36 @@
                         }
                     }
                 });
+
+                // Ordenar por data (mais recente primeiro)
                 return history.sort((a, b) => new Date(b.date) - new Date(a.date));
             }, [allDgs, profile]);
 
+            // Soma real de todos os storePoints encontrados
             const totalDgsCalc = playerHistory.reduce((acc, curr) => acc + (Number(curr.storePoints) || 0), 0);
 
+            // Paginação da tabela
             const historyTotalPages = Math.ceil(playerHistory.length / historyItemsPerPage);
             const currentHistory = playerHistory.slice((historyPage - 1) * historyItemsPerPage, historyPage * historyItemsPerPage);
 
             const handleHistoryPageChange = (val) => {
-                if (val >= 1 && val <= historyTotalPages) setHistoryPage(val);
+                if (val >= 1 && val <= historyTotalPages) {
+                    setHistoryPage(val);
+                    // Removido scroll to top
+                }
             };
 
             return (
                 <div className="profile-view">
+                    {/* Header Card */}
                     <div className="profile-header-card">
                         <div className="profile-banner" style={{backgroundImage: `url(https://i.imgur.com/w1pLw9M.jpeg)`}}></div>
-                        <button className="back-btn" onClick={onBack}><Icons.ChevronLeft /> Voltar</button>
-                        <div className="profile-header-content">
-                            <img src={getSafeImage(profile.image)} className="profile-avatar-large" alt={profile.nickname} />
+                        <button className="back-btn" onClick={onBack}>
+                            <Icons.ChevronLeft /> Voltar
+                        </button>
+                        
+                        <div className="profile-info-row">
+                            <img src={profile.image || 'https://i.imgur.com/7Y5j5zW.png'} className="profile-avatar-large" alt={profile.nickname} />
                             <div className="profile-texts">
                                 <h2>{profile.nickname}</h2>
                                 <p>@{profile.username}</p>
@@ -748,9 +637,10 @@
                         </div>
                     </div>
 
+                    {/* Stats Grid */}
                     <div className="profile-stats-grid">
                         <div className="p-stat-card">
-                            <h4>Pontos Maestria</h4>
+                            <h4>Pontos Totais</h4>
                             <div className="val text-yellow-400">{profile.total_points}</div>
                         </div>
                         <div className="p-stat-card">
@@ -767,15 +657,22 @@
                         </div>
                     </div>
 
+                    {/* Split Layout */}
                     <div className="profile-content-split">
+                        
+                        {/* Esquerda: Classes */}
                         <div className="profile-left-col">
-                            <div className="profile-section-title" style={{marginBottom: 10}}><span>Classes</span></div>
+                            <div className="profile-section-title" style={{marginBottom: 10}}>
+                                <span>Classes</span>
+                            </div>
                             <div className="classes-list">
                                 {sortedElos.map((item, idx) => (
                                     <div key={idx} className="elo-card-small">
                                         <div className="elo-icon-small">{item.elo.current.icon || '🛡️'}</div>
                                         <div className="elo-info-small">
-                                            <div className="elo-role-name-small"><RoleBadge role={item.role} /></div>
+                                            <div className="elo-role-name-small">
+                                                <RoleBadge role={item.role} />
+                                            </div>
                                             <div className="elo-rank-small">
                                                 <span>{item.elo.current.name}</span>
                                                 <span style={{color: 'var(--accent)', fontWeight: 'bold'}}>{item.points} pts</span>
@@ -789,8 +686,12 @@
                             </div>
                         </div>
 
+                        {/* Direita: Histórico */}
                         <div className="profile-right-col" id="profile-history-top">
-                            <div className="profile-section-title" style={{marginBottom: 10}}><span>Histórico de Aulas</span></div>
+                            <div className="profile-section-title" style={{marginBottom: 10}}>
+                                <span>Histórico de Aulas</span>
+                            </div>
+
                             <div className="players-table-container">
                                 <table>
                                     <thead>
@@ -813,16 +714,25 @@
                                         ))}
                                     </tbody>
                                 </table>
+                                
                                 {historyTotalPages > 1 && (
                                     <div className="pagination" style={{padding: '20px', justifyContent: 'center'}}>
-                                        <button className="page-btn" disabled={historyPage === 1} onClick={() => handleHistoryPageChange(historyPage - 1)}><Icons.ChevronLeft /></button>
-                                        <span style={{color: '#888'}}>Página <b style={{color: '#fff'}}>{historyPage}</b> de {historyTotalPages}</span>
-                                        <button className="page-btn" disabled={historyPage === historyTotalPages} onClick={() => handleHistoryPageChange(historyPage + 1)}><Icons.ChevronRight /></button>
+                                        <button className="page-btn" disabled={historyPage === 1} onClick={() => handleHistoryPageChange(historyPage - 1)}>
+                                            <Icons.ChevronLeft />
+                                        </button>
+                                        <span style={{color: '#888'}}>
+                                            Página <b style={{color: '#fff'}}>{historyPage}</b> de {historyTotalPages}
+                                        </span>
+                                        <button className="page-btn" disabled={historyPage === historyTotalPages} onClick={() => handleHistoryPageChange(historyPage + 1)}>
+                                            <Icons.ChevronRight />
+                                        </button>
                                     </div>
                                 )}
                             </div>
                         </div>
+
                     </div>
+                    
                     <div style={{height: 40}}></div>
                 </div>
             );
@@ -831,16 +741,22 @@
         // --- Modal de Aula (Dungeon) ---
         const DungeonModal = ({ data, onClose }) => {
             if (!data) return null;
+
+            // Ordenar jogadores por Dano (Maior para Menor)
             const sortedPlayers = React.useMemo(() => {
                 if (!data.players) return [];
                 return [...data.players].sort((a, b) => parseDamage(b.damage) - parseDamage(a.damage));
             }, [data.players]);
 
+            // Calcular o máximo de DGs para exibir no cabeçalho
             const maxDgs = sortedPlayers.length > 0 
                 ? Math.max(...sortedPlayers.map(p => Number(p.storePoints) || 0)) 
                 : 0;
             
+            // Top DPS é sempre o primeiro da lista ordenada
             const topDPSPlayer = sortedPlayers.length > 0 ? sortedPlayers[0] : null;
+            
+            // Dano Máximo da sessão (para cálculo da barra relativa) é o dano do primeiro
             const sessionMaxDamage = topDPSPlayer ? parseDamage(topDPSPlayer.damage) : 1;
 
             return (
@@ -853,7 +769,9 @@
                                 </h2>
                                 <p style={{color: 'var(--text-secondary)', marginTop: '5px', fontSize: '0.9rem'}}>{formatDate(data.date)}</p>
                             </div>
-                            <button onClick={onClose} style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer', flexShrink: 0}}><Icons.X /></button>
+                            <button onClick={onClose} style={{background: 'none', border: 'none', color: '#fff', cursor: 'pointer', flexShrink: 0}}>
+                                <Icons.X />
+                            </button>
                         </div>
                         <div className="modal-body custom-scrollbar">
                             <div className="stats-grid">
@@ -867,39 +785,62 @@
                                 </div>
                                 <div className="stat-box">
                                     <div style={{color: 'var(--text-secondary)', fontSize: '0.85rem'}}>Pontos Distribuídos</div>
-                                    <div className="stat-val" style={{color: 'var(--accent)'}}>{sortedPlayers.reduce((acc, p) => acc + (Number(p.points) || 0), 0)}</div>
+                                    <div className="stat-val" style={{color: 'var(--accent)'}}>
+                                        {sortedPlayers.reduce((acc, p) => acc + (Number(p.points) || 0), 0)}
+                                    </div>
                                 </div>
                             </div>
-                            <h3 style={{color: '#fff', marginBottom: '15px', display: 'flex', gap: '10px'}}><Icons.History /> Dados</h3>
+
+                            <h3 style={{color: '#fff', marginBottom: '15px', display: 'flex', gap: '10px'}}>
+                                <Icons.History /> Dados
+                            </h3>
+                            
                             <div className="players-table-container">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th style={{width: '50px', textAlign: 'center'}}>#</th>
-                                            <th>Aluno</th><th>Role</th><th style={{textAlign: 'right'}}>Dano</th><th style={{textAlign: 'center'}}>Pts</th><th style={{textAlign: 'center'}}>Part.</th><th style={{width: '35%'}}>DANO %</th>
+                                            <th>Aluno</th>
+                                            <th>Role</th>
+                                            <th style={{textAlign: 'right'}}>Dano</th>
+                                            <th style={{textAlign: 'center'}}>Pts</th>
+                                            <th style={{textAlign: 'center'}}>Part.</th>
+                                            <th style={{width: '35%'}}>DANO %</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {sortedPlayers.map((player, idx) => {
                                             const currentDamage = parseDamage(player.damage);
+                                            // Cálculo da barra relativo ao Maior Dano da sala (DPS Meter Style)
                                             const barWidth = sessionMaxDamage > 0 ? (currentDamage / sessionMaxDamage) * 100 : 0;
-                                            const isTopDPS = idx === 0;
+                                            const isTopDPS = idx === 0; // O primeiro da lista é o Top DPS
+
                                             return (
                                                 <tr key={idx}>
                                                     <td style={{textAlign: 'center', color: '#666', fontWeight: 'bold'}}>{idx + 1}</td>
                                                     <td style={{fontWeight: '500', color: isTopDPS ? 'var(--accent)' : '#fff'}}>
                                                         {isTopDPS && '👑 '} {player.nick}
                                                     </td>
-                                                    <td><RoleBadge role={player.role} /></td>
+                                                    <td>
+                                                        <RoleBadge role={player.role} />
+                                                    </td>
                                                     <td style={{textAlign: 'right', fontFamily: 'monospace', color: isTopDPS ? '#fff' : '#ccc', fontWeight: isTopDPS ? 'bold' : 'normal'}}>
                                                         {parseInt(player.damage).toLocaleString('pt-PT')}
                                                     </td>
-                                                    <td style={{textAlign: 'center', color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.1rem'}}>{player.points}</td>
-                                                    <td style={{textAlign: 'center', color: '#3b82f6', fontWeight: 'bold', fontSize: '1.1rem'}}>{player.storePoints || 0}</td>
+                                                    <td style={{textAlign: 'center', color: 'var(--accent)', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                                        {player.points}
+                                                    </td>
+                                                    <td style={{textAlign: 'center', color: '#3b82f6', fontWeight: 'bold', fontSize: '1.1rem'}}>
+                                                        {player.storePoints || 0}
+                                                    </td>
                                                     <td>
                                                         <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                                                            <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${barWidth}%`}}></div></div>
-                                                            <span style={{fontSize: '0.85rem', color: '#fff', fontWeight: 'bold', minWidth: '40px', textAlign: 'right'}}>{player.maxPercentage}</span>
+                                                            <div className="progress-bar-container">
+                                                                <div className="progress-bar-fill" style={{width: `${barWidth}%`}}></div>
+                                                            </div>
+                                                            <span style={{fontSize: '0.85rem', color: '#fff', fontWeight: 'bold', minWidth: '40px', textAlign: 'right'}}>
+                                                                {player.maxPercentage}
+                                                            </span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -915,35 +856,38 @@
         };
 
         const App = () => {
-            const [activeTab, setActiveTab] = React.useState('history'); 
+            const [activeTab, setActiveTab] = React.useState('history'); // history | ranking | profile
+            
+            // Dados DGS
             const [dgs, setDgs] = React.useState([]);
             const [loadingDgs, setLoadingDgs] = React.useState(true);
             const [selectedDg, setSelectedDg] = React.useState(null);
             
+            // Dados Profiles (Ranking)
             const [profiles, setProfiles] = React.useState([]);
             const [loadingProfiles, setLoadingProfiles] = React.useState(false);
             const [selectedProfile, setSelectedProfile] = React.useState(null);
-            
-            // Novo Estado para Filtro de Tempo do Ranking
-            const [rankingFilter, setRankingFilter] = React.useState('TOTAL'); // TOTAL, 30D, 7D
-            const [calculatedRanking, setCalculatedRanking] = React.useState([]);
+            const [sortConfig, setSortConfig] = React.useState({ key: 'total_points', direction: 'desc' });
 
+            // UI
             const [error, setError] = React.useState(null);
             const [mobileOpen, setMobileOpen] = React.useState(false);
             const [isCollapsed, setIsCollapsed] = React.useState(false);
             
+            // Paginação DGS
             const [currentPage, setCurrentPage] = React.useState(1);
             const [itemsPerPage, setItemsPerPage] = React.useState(getDynamicItemsPerPage());
             const [searchTerm, setSearchTerm] = React.useState('');
             const [dateFilter, setDateFilter] = React.useState('');
 
+            // Efeito Resize
             React.useEffect(() => {
                 const handleResize = () => setItemsPerPage(getDynamicItemsPerPage());
                 window.addEventListener('resize', handleResize);
                 return () => window.removeEventListener('resize', handleResize);
             }, []);
 
-            // 1. Fetch DGS (Histórico)
+            // Fetch DGS (Histórico)
             React.useEffect(() => {
                 const fetchDgs = async () => {
                     let allData = [];
@@ -970,80 +914,22 @@
                 fetchDgs();
             }, []);
 
-            // 2. Fetch Profiles (Metadata)
+            // Fetch Profiles (Ranking) - Só busca se mudar para aba Ranking
             React.useEffect(() => {
-                const fetchProfiles = async () => {
-                    if (profiles.length > 0) return; // evita re-fetch
-                    setLoadingProfiles(true);
-                    try {
-                        const params = new URLSearchParams({ limit: 1000, apikey: PROFILES_API_KEY });
-                        const response = await fetch(`${PROFILES_API_URL}?${params.toString()}`);
-                        if (!response.ok) throw new Error('Falha API Perfis');
-                        const data = await response.json();
-                        setProfiles(data);
-                    } catch (err) { console.error(err); setError('Erro ao carregar ranking.'); } finally { setLoadingProfiles(false); }
-                };
-                if (activeTab === 'ranking') fetchProfiles();
-            }, [activeTab]);
-
-            // 3. Calcular Ranking Dinâmico
-            React.useEffect(() => {
-                if (dgs.length === 0 || profiles.length === 0) return;
-
-                const now = new Date();
-                const cutoffDate = new Date();
-                if (rankingFilter === '30D') cutoffDate.setDate(now.getDate() - 30);
-                if (rankingFilter === '7D') cutoffDate.setDate(now.getDate() - 7);
-
-                // Mapa para agregar pontos
-                const scores = {}; // { nickname: { totalPoints, totalParticipations, profileData } }
-
-                // Processar DGs
-                dgs.forEach(dg => {
-                    const dgDate = new Date(dg.date);
-                    // Aplica Filtro de Data
-                    if (rankingFilter !== 'TOTAL' && dgDate < cutoffDate) return;
-
-                    if (dg.players) {
-                        dg.players.forEach(p => {
-                            if (!p.nick) return;
-                            const nick = p.nick.toLowerCase(); // Normalizar nick
-                            if (!scores[nick]) {
-                                scores[nick] = { points: 0, participations: 0, realNick: p.nick };
-                            }
-                            scores[nick].points += Number(p.points) || 0;
-                            scores[nick].participations += 1;
-                        });
-                    }
-                });
-
-                // Cruzar com Profiles para pegar Avatar e Role
-                const finalRanking = Object.keys(scores).map(nick => {
-                    const stats = scores[nick];
-                    // Tenta achar perfil pelo nickname
-                    const profile = profiles.find(p => p.nickname.toLowerCase() === nick) || {};
-                    
-                    return {
-                        id: profile.id || `temp-${nick}`,
-                        nickname: profile.nickname || stats.realNick,
-                        username: profile.username || '',
-                        image: getSafeImage(profile.image), // Avatar Validado
-                        total_points: stats.points, // Valor calculado dinamicamente
-                        total_participations: stats.participations, // Valor calculado dinamicamente
-                        most_frequent_role: profile.most_frequent_role || 'Desconhecido',
-                        // Mantém dados completos do perfil para quando clicar
-                        ...profile,
-                        total_points: stats.points, 
-                        total_participations: stats.participations 
+                if (activeTab === 'ranking' && profiles.length === 0) {
+                    const fetchProfiles = async () => {
+                        setLoadingProfiles(true);
+                        try {
+                            const params = new URLSearchParams({ limit: 1000, apikey: PROFILES_API_KEY });
+                            const response = await fetch(`${PROFILES_API_URL}?${params.toString()}`);
+                            if (!response.ok) throw new Error('Falha API Perfis');
+                            const data = await response.json();
+                            setProfiles(data);
+                        } catch (err) { console.error(err); setError('Erro ao carregar ranking.'); } finally { setLoadingProfiles(false); }
                     };
-                });
-
-                // Ordenar por Pontos Desc
-                finalRanking.sort((a, b) => b.total_points - a.total_points);
-                setCalculatedRanking(finalRanking);
-
-            }, [dgs, profiles, rankingFilter]);
-
+                    fetchProfiles();
+                }
+            }, [activeTab]);
 
             // Lógica de Filtro e Paginação DGS
             const filteredDgs = React.useMemo(() => {
@@ -1058,19 +944,32 @@
             const dgsTotalPages = Math.ceil(filteredDgs.length / itemsPerPage);
             const currentDgs = filteredDgs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+            // Lógica de Ordenação Ranking
+            const sortedProfiles = React.useMemo(() => {
+                let sortable = [...profiles];
+                sortable.sort((a, b) => {
+                    if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+                    if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+                return sortable;
+            }, [profiles, sortConfig]);
+
+            const handleSort = (key) => {
+                let direction = 'desc';
+                if (sortConfig.key === key && sortConfig.direction === 'desc') direction = 'asc';
+                setSortConfig({ key, direction });
+            };
+
             const handleOpenProfile = (profile) => {
                 setSelectedProfile(profile);
-                setActiveTab('profile');
+                setActiveTab('profile'); // Troca a view inteira
             };
 
             const handleBackToRanking = () => {
                 setSelectedProfile(null);
                 setActiveTab('ranking');
             };
-
-            // Top 3 Separate
-            const top3 = calculatedRanking.slice(0, 3);
-            const restOfRanking = calculatedRanking.slice(3);
 
             return (
                 <div className="app-container">
@@ -1099,9 +998,10 @@
                                 <Icons.History width={20} /> <span className="nav-text">Histórico de Aulas</span>
                             </button>
                             <button className={`nav-btn ${activeTab === 'ranking' || activeTab === 'profile' ? 'active' : ''}`} onClick={() => {setActiveTab('ranking'); setMobileOpen(false);}}>
-                                <Icons.Ranking width={20} /> <span className="nav-text">Ranking Maestria</span>
+                                <Icons.Ranking width={20} /> <span className="nav-text">Ranking Geral</span>
                             </button>
                         </nav>
+                        
                         <div className="footer-text" style={{padding: '0 20px 20px'}}>&copy; 2025 Avalon</div>
                     </aside>
 
@@ -1113,27 +1013,18 @@
                         </div>
 
                         <div className="content-scroll" id="list-top">
-                            {/* Header Comum */}
+                            {/* Header Comum (exceto no Perfil que tem header próprio) */}
                             {activeTab !== 'profile' && (
                                 <div className="section-header">
                                     <div>
                                         <h1 className="title-large">
                                             {activeTab === 'history' ? 'Histórico de ' : 'Ranking '} 
-                                            <span className="title-accent">{activeTab === 'history' ? 'Aulas' : 'Maestria'}</span>
+                                            <span className="title-accent">{activeTab === 'history' ? 'Aulas' : 'Alunos'}</span>
                                         </h1>
                                         {activeTab === 'history' && (
                                             <p style={{color: '#888', marginTop: '4px', fontSize: '0.9rem'}}>Total de aulas: <span style={{color: '#fff', fontWeight: 'bold'}}>{filteredDgs.length}</span></p>
                                         )}
                                     </div>
-                                    
-                                    {/* Filtros de Ranking */}
-                                    {activeTab === 'ranking' && (
-                                        <div className="ranking-filters">
-                                            <button className={`rank-filter-btn ${rankingFilter === 'TOTAL' ? 'active' : ''}`} onClick={() => setRankingFilter('TOTAL')}>TOTAL</button>
-                                            <button className={`rank-filter-btn ${rankingFilter === '30D' ? 'active' : ''}`} onClick={() => setRankingFilter('30D')}>30D</button>
-                                            <button className={`rank-filter-btn ${rankingFilter === '7D' ? 'active' : ''}`} onClick={() => setRankingFilter('7D')}>7D</button>
-                                        </div>
-                                    )}
                                 </div>
                             )}
                             
@@ -1174,112 +1065,42 @@
                             {activeTab === 'ranking' && (
                                 <>
                                     {loadingProfiles ? <div style={{textAlign: 'center', padding: 40, color: '#888'}}>Carregando Ranking...</div> : (
-                                        <>
-                                            {/* Top 3 Podium */}
-                                            <div className="top-three-container">
-                                                {/* Rank 2 */}
-                                                {top3[1] && (
-                                                    <div className="top-card rank-2" onClick={() => handleOpenProfile(top3[1])}>
-                                                        {/* Fundo do Card (GIF/IMG) */}
-                                                        <img src={getSafeImage(top3[1].image)} className="top-card-bg" alt="" />
-                                                        <div className="top-card-content">
-                                                            <div className="rank-badge">2</div>
-                                                            <img src={getSafeImage(top3[1].image)} className="top-avatar" />
-                                                            <div className="top-info">
-                                                                <div className="top-name">{top3[1].nickname}</div>
-                                                                <div style={{marginBottom: 4}}>
-                                                                    <RoleBadge role={top3[1].most_frequent_role} />
-                                                                </div>
-                                                                <div className="top-stats">
-                                                                    <div className="top-points">{top3[1].total_points} PTS</div>
-                                                                    <div className="top-dgs">{top3[1].total_participations} Aulas</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                                
-                                                {/* Rank 1 */}
-                                                {top3[0] && (
-                                                    <div className="top-card rank-1" onClick={() => handleOpenProfile(top3[0])}>
-                                                        <img src={getSafeImage(top3[0].image)} className="top-card-bg" alt="" />
-                                                        <div className="top-card-content">
-                                                            <div className="rank-badge">1</div>
-                                                            <img src={getSafeImage(top3[0].image)} className="top-avatar" />
-                                                            <div className="top-info">
-                                                                <div className="top-name">{top3[0].nickname}</div>
-                                                                <div style={{marginBottom: 4}}>
-                                                                    <RoleBadge role={top3[0].most_frequent_role} />
-                                                                </div>
-                                                                <div className="top-stats">
-                                                                    <div className="top-points">{top3[0].total_points} PTS</div>
-                                                                    <div className="top-dgs">{top3[0].total_participations} Aulas</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {/* Rank 3 */}
-                                                {top3[2] && (
-                                                    <div className="top-card rank-3" onClick={() => handleOpenProfile(top3[2])}>
-                                                        <img src={getSafeImage(top3[2].image)} className="top-card-bg" alt="" />
-                                                        <div className="top-card-content">
-                                                            <div className="rank-badge">3</div>
-                                                            <img src={getSafeImage(top3[2].image)} className="top-avatar" />
-                                                            <div className="top-info">
-                                                                <div className="top-name">{top3[2].nickname}</div>
-                                                                <div style={{marginBottom: 4}}>
-                                                                    <RoleBadge role={top3[2].most_frequent_role} />
-                                                                </div>
-                                                                <div className="top-stats">
-                                                                    <div className="top-points">{top3[2].total_points} PTS</div>
-                                                                    <div className="top-dgs">{top3[2].total_participations} Aulas</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Tabela do Resto */}
-                                            <div className="ranking-table-container">
-                                                <table className="ranking-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style={{width: 60, textAlign: 'center'}}>#</th>
-                                                            <th>Aluno</th>
-                                                            <th>Pontos Maestria</th>
-                                                            <th>Aulas Totais</th>
-                                                            <th>Main Role</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {restOfRanking.map((profile, idx) => (
-                                                            <tr key={profile.id} onClick={() => handleOpenProfile(profile)}>
-                                                                <td className="rank-number" style={{color: '#666'}}>{idx + 4}</td>
-                                                                <td>
-                                                                    <div className="player-cell">
-                                                                        <img src={getSafeImage(profile.image)} className="player-avatar-small" />
-                                                                        <div>
-                                                                            <div style={{fontWeight: '600', color: '#fff'}}>{profile.nickname}</div>
-                                                                            <div style={{fontSize: '0.75rem', color: '#666'}}>@{profile.username}</div>
-                                                                        </div>
+                                        <div className="ranking-table-container">
+                                            <table className="ranking-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style={{width: 60, textAlign: 'center'}}>#</th>
+                                                        <th>Aluno</th>
+                                                        <th onClick={() => handleSort('total_points')} style={{cursor: 'pointer', color: sortConfig.key === 'total_points' ? 'var(--accent)' : ''}}>Pontos Totais ↕</th>
+                                                        <th onClick={() => handleSort('total_participations')} style={{cursor: 'pointer', color: sortConfig.key === 'total_participations' ? 'var(--accent)' : ''}}>Aulas Totais ↕</th>
+                                                        <th>Main Role</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {sortedProfiles.map((profile, idx) => (
+                                                        <tr key={profile.id} onClick={() => handleOpenProfile(profile)}>
+                                                            <td className={`rank-number rank-top-${idx + 1}`}>{idx + 1}</td>
+                                                            <td>
+                                                                <div className="player-cell">
+                                                                    <img src={profile.image || 'https://i.imgur.com/7Y5j5zW.png'} className="player-avatar-small" />
+                                                                    <div>
+                                                                        <div style={{fontWeight: '600', color: '#fff'}}>{profile.nickname}</div>
+                                                                        <div style={{fontSize: '0.75rem', color: '#666'}}>@{profile.username}</div>
                                                                     </div>
-                                                                </td>
-                                                                <td style={{fontWeight: '700', color: 'var(--accent)'}}>{profile.total_points}</td>
-                                                                <td>{profile.total_participations}</td>
-                                                                <td>
-                                                                    <span style={{background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center'}}>
-                                                                        <RoleBadge role={profile.most_frequent_role} />
-                                                                    </span>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </>
+                                                                </div>
+                                                            </td>
+                                                            <td style={{fontWeight: '700', color: 'var(--accent)'}}>{profile.total_points}</td>
+                                                            <td>{profile.total_participations}</td>
+                                                            <td>
+                                                                <span style={{background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center'}}>
+                                                                    <RoleBadge role={profile.most_frequent_role} />
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     )}
                                 </>
                             )}
